@@ -82,6 +82,7 @@ const UsersList = () => {
             <th className="p-2">email</th>
             <th className="p-2">address</th>
             <th className="p-2">mobileNumber</th>
+            <th className="p-2">Status</th>
             <th className="p-2">Actions</th>
           </tr>
         </thead>
@@ -92,6 +93,25 @@ const UsersList = () => {
               <td className="p-2">{faq.email}</td>
               <td className="p-2">{faq.address}</td>
               <td className="p-2">{faq.mobileNumber}</td>
+              <td className="p-2 gap-2 mt-3">
+                <button
+                  className=" bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition duration-200"
+                  // onClick={() => handleAcceptQuote(request._id)}
+                  style={{ padding: "5px 14px" }}
+                >
+                  Accept
+                </button>
+                <button
+                  className=" bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition duration-200 ml-4"
+                  onClick={() => {
+                    handleDeleteFaq(faq.id);
+                    // setShowConfirmModal(true);
+                  }}
+                  style={{ padding: "5px 14px" }}
+                >
+                  Reject
+                </button>
+              </td>
               <td className="p-2 flex justify-center">
                 <FaEdit
                   onClick={() => handleEditFaq(faq.id)}

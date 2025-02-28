@@ -19,8 +19,9 @@ export function otpVerifyMutation() {
 
     onSuccess: async (res) => {
       dispatch(setPasswordChangeToken(res.data.token));
+      localStorage.setItem("passwordChangeToken", res.data.token);
       toast.success(res.data.message);
-      navigate("/change-password");
+      navigate("/reset-password");
     },
 
     onError: (res) => {

@@ -35,7 +35,7 @@ export const quoteendpoints = {
 };
 export const shipmentendpoints = {
   ALL_SHIPMENT_DASHBOARD_LIST: BASE_URL + "/api/admin/all-quote-list",
-  ALL_SHIPMENT_LIST: BASE_URL + "/api/admin/shipment-quote-list",
+  ALL_UTE_LIST: BASE_URL + "/api/admin/get-all-ute-list",
   SINGLE_SHIPMENT_DETAIL: BASE_URL + "/api/admin/single-shipment-detail",
   SHIPMENT_DELIVERY_DETAIL: BASE_URL + "/api/admin/shipment-delivery-detail",
   DELETE_SHIPMENT: BASE_URL + "/api/admin/shipment-delete",

@@ -5,10 +5,7 @@ import toast from "react-hot-toast";
 import { authendpoints } from "../../../services/apis";
 
 async function resetPassword(data) {
-  return axiosInstance.post(
-    authendpoints.RESET_PASSWORD + `/${data.token}`,
-    data
-  );
+  return axiosInstance.post(authendpoints.RESET_PASSWORD, data);
 }
 
 export function resetPasswodMutation() {
@@ -19,6 +16,7 @@ export function resetPasswodMutation() {
     onSuccess: async (res) => {
       toast.success(res.data.message);
       localStorage.removeItem("email");
+      localStorage.removeItem("passwordChangeToken");
       navigate("/login");
     },
 

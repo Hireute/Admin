@@ -65,6 +65,8 @@ const SignIn = () => {
       await mutateAsync(data);
     } catch (error) {}
   };
+
+  console.log(errors);
   return (
     <div className="flex flex-col md:flex-row h-screen">
       <div className="md:w-1/2 relative">

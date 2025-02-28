@@ -12,8 +12,10 @@ import store from "./store/store";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
+import { setup } from "./services/axios";
 
 function App() {
+  setup();
   const queryClient = new QueryClient();
   const isLoggedIn = false;
 

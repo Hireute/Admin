@@ -16,19 +16,6 @@ const initialFAQs = [
     image:
       "https://t3.ftcdn.net/jpg/04/08/39/96/240_F_408399601_CeSyb7MWr5FQvYX0kpv3lzftPqoB5iZ7.jpg",
   },
-  {
-    id: "2",
-
-    userName: "John Do2",
-    uteName: "Heavy-duty UTE for transportation",
-    uteModel: "Toyota Hilux",
-    location: "California",
-    uteModel: "Toyota Hilux",
-    utePrice: "20000",
-    paymentStatus: "Pending",
-    image:
-      "https://t4.ftcdn.net/jpg/06/78/70/79/240_F_678707990_yylMmrDEp54HeHaJMcjWqSr0T7AOHy2I.jpg",
-  },
 ];
 
 const PaymenetHistory = () => {

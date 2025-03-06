@@ -8,15 +8,15 @@ async function getAllUteList({ page = 1, limit = 10 } = {}) {
     page,
     limit,
   };
-  const { data } = await axiosInstance.get(shipmentendpoints.ALL_UTE_LIST, {
+  const { data } = await axiosInstance.get(shipmentendpoints.ALL_USER_LIST, {
     params,
   });
   return data;
 }
 
-export function useGetAllUteList({ page = 1, limit = 10 } = {}) {
+export function useGetAllJobUserList({ page = 1, limit = 10 } = {}) {
   return useQuery({
-    queryKey: ["uteList", page, limit],
+    queryKey: [shipmentendpoints.ALL_USER_LIST, page, limit],
     queryFn: () => getAllUteList({ page, limit }),
   });
 }

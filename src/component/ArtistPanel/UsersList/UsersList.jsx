@@ -2,6 +2,9 @@ import { useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
 import { useForm } from "react-hook-form";
+import { useGetAllJobUserList } from "./https/useGetAllJobUserList";
+import { isPending } from "@reduxjs/toolkit";
+import useActiveDeactiveMutation from "./https/useActiveDeactiveMutation";
 
 const initialFAQs = [
   {
@@ -32,6 +35,20 @@ const UsersList = () => {
     reset,
     formState: { errors },
   } = useForm();
+
+  const { data, isLoading } = useGetAllJobUserList({ page: 1, limit: 10 });
+  console.log(data);
+
+  const { mutateAsync, isPending } = useActiveDeactiveMutation();
+
+  const handelActive = (id) => {
+    const newData = {
+      id: id,
+      isActive: "active",
+    };
+    mutateAsync(newData);
+    setEditingId(null);
+  };
 
   const onSubmit = (data) => {
     if (editingId !== null) {
@@ -83,47 +100,51 @@ const UsersList = () => {
             <th className="p-2">address</th>
             <th className="p-2">mobileNumber</th>
             <th className="p-2">Status</th>
-            <th className="p-2">Actions</th>
+            {/* <th className="p-2">Actions</th> */}
           </tr>
         </thead>
         <tbody>
-          {faqs.map((faq) => (
-            <tr key={faq.id} className="border-t text-center">
-              <td className="p-2">{faq.name}</td>
-              <td className="p-2">{faq.email}</td>
-              <td className="p-2">{faq.address}</td>
-              <td className="p-2">{faq.mobileNumber}</td>
-              <td className="p-2 gap-2 mt-3">
-                <button
-                  className=" bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition duration-200"
-                  // onClick={() => handleAcceptQuote(request._id)}
-                  style={{ padding: "5px 14px" }}
-                >
-                  Accept
-                </button>
-                <button
-                  className=" bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition duration-200 ml-4"
-                  onClick={() => {
-                    handleDeleteFaq(faq.id);
-                    // setShowConfirmModal(true);
-                  }}
-                  style={{ padding: "5px 14px" }}
-                >
-                  Reject
-                </button>
-              </td>
-              <td className="p-2 flex justify-center">
-                <FaEdit
-                  onClick={() => handleEditFaq(faq.id)}
-                  className="text-[#7F0284] text-2xl mr-2 cursor-pointer"
-                />
-                <AiFillDelete
-                  onClick={() => handleDeleteFaq(faq.id)}
-                  className="text-red-600 text-2xl cursor-pointer"
-                />
-              </td>
-            </tr>
-          ))}
+          {data?.data?.length > 0 ? (
+            data?.data?.map((faq) => (
+              <tr key={faq.id} className="border-t text-center">
+                <td className="p-2">{faq?.firstName + " " + faq?.lastName}</td>
+                <td className="p-2">{faq?.email}</td>
+                <td className="p-2">{faq?.address}</td>
+                <td className="p-2">{faq?.mobileNumber}</td>
+                <td className="p-2 gap-2 mt-3">
+                  <button
+                    className=" bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition duration-200"
+                    onClick={() => handelActive(faq._id)}
+                    style={{ padding: "5px 14px" }}
+                  >
+                    {isPending ? "Activating..." : "Active"}
+                  </button>
+                  <button
+                    className=" bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition duration-200 ml-4"
+                    onClick={() => {
+                      handleDeleteFaq(faq?.id);
+                      // setShowConfirmModal(true);
+                    }}
+                    style={{ padding: "5px 14px" }}
+                  >
+                    Deactive
+                  </button>
+                </td>
+                {/* <td className="p-2 flex justify-center">
+                  <FaEdit
+                    onClick={() => handleEditFaq(faq.id)}
+                    className="text-[#7F0284] text-2xl mr-2 cursor-pointer"
+                  />
+                  <AiFillDelete
+                    onClick={() => handleDeleteFaq(faq.id)}
+                    className="text-red-600 text-2xl cursor-pointer"
+                  />
+                </td> */}
+              </tr>
+            ))
+          ) : (
+            <div>No User Yet</div>
+          )}
         </tbody>
       </table>
 

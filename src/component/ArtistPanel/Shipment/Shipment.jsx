@@ -17,7 +17,9 @@ const ShipmentTable = () => {
     formState: { errors },
   } = useForm();
 
-  const { data, isLoading, error } = useGetAllUteList({ page: 1, limit: 10 });
+  const { data, isLoading } = useGetAllUteList({ page: 1, limit: 10 });
+
+  console.log(data);
 
   const onSubmit = (data) => {
     if (editingId !== null) {
@@ -98,8 +100,8 @@ const ShipmentTable = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.uteList?.length > 0 ? (
-              data?.uteList?.map((faq) => (
+            {data?.data?.length > 0 ? (
+              data?.data?.map((faq) => (
                 <tr key={faq.id} className="border-t">
                   <td className="px-4 py-2 whitespace-nowrap">
                     {faq?.fullName}

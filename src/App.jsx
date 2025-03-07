@@ -16,45 +16,36 @@ import { setup } from "./services/axios";
 
 function App() {
   setup();
-  const queryClient = new QueryClient();
+
   const isLoggedIn = false;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <Toaster position="top-right" />
+    <Router>
+      <Navbar />
+      <Routes>
+        {/* Public routes */}
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route path="/otp" element={<Otp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
-        <Router>
-          <Navbar />
-          <Routes>
-            {/* Public routes */}
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/forget-password" element={<ForgetPassword />} />
-            <Route path="/otp" element={<Otp />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+        {/* Protected routes */}
 
-            {/* Protected routes */}
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute isLoggedIn={isLoggedIn} component={ArtistPanel} />
+          }
+        />
 
-            <Route
-              path="/*"
-              element={
-                <ProtectedRoute
-                  isLoggedIn={isLoggedIn}
-                  component={ArtistPanel}
-                />
-              }
-            />
-
-            {/* <Route
+        {/* <Route
           path="/*"
           element={
             <ArtistPanel/>
           }
         /> */}
-          </Routes>
-        </Router>
-      </Provider>
-    </QueryClientProvider>
+      </Routes>
+    </Router>
   );
 }
 

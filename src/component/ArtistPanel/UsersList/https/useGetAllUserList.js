@@ -14,9 +14,9 @@ async function getAllUteList({ page = 1, limit = 10 } = {}) {
   return data;
 }
 
-export function useGetAllJobUserList({ page = 1, limit = 10 } = {}) {
+export function useGetAllUserList({ page = 1, limit = 10 } = {}) {
   return useQuery({
-    queryKey: [shipmentendpoints.ALL_USER_LIST, page, limit],
+    queryKey: [shipmentendpoints.ALL_USER_LIST],
     queryFn: () => getAllUteList({ page, limit }),
   });
 }

@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { AiFillDelete } from "react-icons/ai";
-import { FaEdit } from "react-icons/fa";
 import { useForm } from "react-hook-form";
-import { useGetAllJobUserList } from "./https/useGetAllJobUserList";
-import { isPending } from "@reduxjs/toolkit";
-import useActiveDeactiveMutation from "./https/useActiveDeactiveMutation";
+import { useGetAllUserList } from "./https/useGetAllUserList";
+import useActiveMutation from "./https/useActiveMutation";
+import Loader from "../../utils/Loader";
 
 const initialFAQs = [
   {
@@ -13,6 +11,7 @@ const initialFAQs = [
     address: "344 patnipura indore",
     email: "shikha@gmail.com",
     mobileNumber: "653344555",
+    active: true,
   },
   {
     id: 2,
@@ -20,6 +19,7 @@ const initialFAQs = [
     address: "555 patnipura indore",
     email: "ishnat@gmail.com",
     mobileNumber: "66446666",
+    active: false,
   },
 ];
 
@@ -27,6 +27,10 @@ const UsersList = () => {
   const [faqs, setFaqs] = useState(initialFAQs);
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [pendingId, setPendingId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1); // Added for pagination
+  const limit = 10; // Items per page
 
   const {
     register,
@@ -36,183 +40,154 @@ const UsersList = () => {
     formState: { errors },
   } = useForm();
 
-  const { data, isLoading } = useGetAllJobUserList({ page: 1, limit: 10 });
+  const { data, isLoading } = useGetAllUserList({ page: currentPage, limit });
   console.log(data);
 
-  const { mutateAsync, isPending } = useActiveDeactiveMutation();
+  const { mutateAsync } = useActiveMutation();
 
-  const handelActive = (id) => {
+  const handleActiveToggle = (id, currentStatus) => {
     const newData = {
       id: id,
-      isActive: "active",
+      isActive: currentStatus ? "inactive" : "active",
     };
-    mutateAsync(newData);
+    setPendingId(id);
+    mutateAsync(newData)
+      .then(() => {
+        setFaqs((prev) =>
+          prev.map((faq) =>
+            faq.id === id ? { ...faq, active: !currentStatus } : faq
+          )
+        );
+      })
+      .finally(() => {
+        setPendingId(null);
+      });
     setEditingId(null);
   };
 
-  const onSubmit = (data) => {
-    if (editingId !== null) {
-      setFaqs((prev) =>
-        prev.map((faq) => (faq.id === editingId ? { ...faq, ...data } : faq))
-      );
-    } else {
-      const newFaq = { id: Date.now(), ...data };
-      setFaqs([...faqs, newFaq]);
-    }
-    reset();
-    setEditingId(null);
-    setAddModalOpen(false);
-  };
+  const filteredUsers = data?.data?.filter((faq) =>
+    faq?.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const handleEditFaq = (id) => {
-    const faq = faqs.find((faq) => faq.id === id);
-    if (faq) {
-      setValue("name", faq.name);
-      setValue("address", faq.address);
-      setValue("email", faq.email);
-      setValue("mobileNumber", faq.mobileNumber);
-      setEditingId(id);
-      setAddModalOpen(true);
+  const totalItems = data?.total || 0;
+  const totalPages = Math.ceil(totalItems / limit);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
     }
   };
 
-  const handleDeleteFaq = (id) => {
-    setFaqs(faqs.filter((faq) => faq.id !== id));
-  };
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="w-full p-6 rounded-lg">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex gap-6 justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Users List</h1>
-        <button
-          className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284]  font-semibold py-2 px-4 rounded-md"
-          onClick={() => setAddModalOpen(true)}
-        >
-          Add User
-        </button>
+        <div className="flex gap-4 items-center">
+          <input
+            type="text"
+            placeholder="Search by email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="px-4 py-2 w-[50vw]  border rounded-md focus:outline-none focus:ring-2 focus:ring-[#7F0284]"
+          />
+        </div>
       </div>
 
       <table className="w-full border bg-white shadow-md rounded-lg">
         <thead>
           <tr className="bg-[#7F0284] text-white">
-            <th className="p-2">name</th>
-            <th className="p-2">email</th>
-            <th className="p-2">address</th>
-            <th className="p-2">mobileNumber</th>
+            <th className="p-2">Name</th>
+            <th className="p-2">Email</th>
+            <th className="p-2">Address</th>
+            <th className="p-2">Mobile Number</th>
             <th className="p-2">Status</th>
-            {/* <th className="p-2">Actions</th> */}
+            <th className="p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {data?.data?.length > 0 ? (
-            data?.data?.map((faq) => (
+          {filteredUsers?.length > 0 ? (
+            filteredUsers.map((faq) => (
               <tr key={faq.id} className="border-t text-center">
                 <td className="p-2">{faq?.firstName + " " + faq?.lastName}</td>
                 <td className="p-2">{faq?.email}</td>
                 <td className="p-2">{faq?.address}</td>
-                <td className="p-2">{faq?.mobileNumber}</td>
-                <td className="p-2 gap-2 mt-3">
-                  <button
-                    className=" bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition duration-200"
-                    onClick={() => handelActive(faq._id)}
-                    style={{ padding: "5px 14px" }}
+                <td className="p-2">{faq?.phoneNumber}</td>
+                <td className="p-2">
+                  <span
+                    className={
+                      faq?.isActive ? "text-green-600" : "text-red-600"
+                    }
                   >
-                    {isPending ? "Activating..." : "Active"}
-                  </button>
+                    {faq?.isActive === true ? "Active" : "Deactive"}
+                  </span>
+                </td>
+                <td className="p-2">
                   <button
-                    className=" bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition duration-200 ml-4"
-                    onClick={() => {
-                      handleDeleteFaq(faq?.id);
-                      // setShowConfirmModal(true);
-                    }}
+                    className={`text-white text-sm rounded-md transition duration-200 ${
+                      faq?.isActive
+                        ? "bg-red-600 hover:bg-red-700"
+                        : "bg-green-600 hover:bg-green-700"
+                    }`}
+                    onClick={() => handleActiveToggle(faq._id, faq?.isActive)}
                     style={{ padding: "5px 14px" }}
+                    disabled={pendingId === faq._id}
                   >
-                    Deactive
+                    {pendingId === faq._id
+                      ? "Processing..."
+                      : faq?.isActive
+                      ? "Deactivate"
+                      : "Activate"}
                   </button>
                 </td>
-                {/* <td className="p-2 flex justify-center">
-                  <FaEdit
-                    onClick={() => handleEditFaq(faq.id)}
-                    className="text-[#7F0284] text-2xl mr-2 cursor-pointer"
-                  />
-                  <AiFillDelete
-                    onClick={() => handleDeleteFaq(faq.id)}
-                    className="text-red-600 text-2xl cursor-pointer"
-                  />
-                </td> */}
               </tr>
             ))
           ) : (
-            <div>No User Yet</div>
+            <tr>
+              <td colSpan={6} className="p-2 text-center">
+                {searchTerm ? "No matching users found" : "No Users Yet"}
+              </td>
+            </tr>
           )}
         </tbody>
       </table>
 
-      {isAddModalOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center p-4">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4">
-              {editingId !== null ? "Edit User" : "Add a New User"}
-            </h2>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <input
-                type="text"
-                className="w-full p-2 border rounded mb-3"
-                {...register("name", { required: "Name is required" })}
-                placeholder="Enter Name"
-              />
-              {errors.name && (
-                <div className="text-red-500">{errors.name.message}</div>
-              )}
-              <input
-                type="email"
-                className="w-full p-2 border rounded mb-3"
-                {...register("email", { required: "Email is required" })}
-                placeholder="Enter Email"
-              />
-              {errors.name && (
-                <div className="text-red-500">{errors.name.message}</div>
-              )}
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex justify-center items-center gap-2">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-3 py-1 bg-[#7F0284] text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            Previous
+          </button>
 
-              <textarea
-                className="w-full p-2 border rounded mb-3"
-                {...register("address", { required: "Address is required" })}
-                placeholder="Enter Address"
-              ></textarea>
-              {errors.address && (
-                <div className="text-red-500">{errors.address.message}</div>
-              )}
-              <input
-                type="text"
-                className="w-full p-2 border rounded mb-3"
-                {...register("mobileNumber", {
-                  required: "Mobile number is required",
-                })}
-                placeholder="Enter Mobile Number"
-              />
-              {errors.mobileNumber && (
-                <div className="text-red-500">
-                  {errors.mobileNumber.message}
-                </div>
-              )}
+          {/* Page numbers */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`px-3 py-1 rounded-md ${
+                currentPage === page
+                  ? "bg-[#7F0284] text-white"
+                  : "bg-gray-200 text-[#7F0284]"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
 
-              <div className="flex justify-end space-x-3">
-                <button
-                  type="submit"
-                  className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284]  text-white py-2 px-4 rounded"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAddModalOpen(false)}
-                  className="bg-gray-500 text-white py-2 px-4 rounded"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 bg-[#7F0284] text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
         </div>
       )}
     </div>

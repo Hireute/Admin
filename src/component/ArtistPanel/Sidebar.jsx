@@ -19,6 +19,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { FaQuora } from "react-icons/fa";
 import { BsCardChecklist } from "react-icons/bs";
 import { GiMoneyStack } from "react-icons/gi";
+import { RiFileList3Line } from "react-icons/ri";
 export const sections = [
   {
     key: "dashboard",
@@ -31,6 +32,12 @@ export const sections = [
     icon: <FiTruck size={28} />,
     label: "Ute List",
     path: "ute-list",
+  },
+  {
+    key: "Job-list",
+    icon: <RiFileList3Line size={28} />,
+    label: "Job List",
+    path: "job-list",
   },
   {
     key: "booking-list",

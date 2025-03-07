@@ -3,6 +3,7 @@ import { AiFillDelete } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useGetAllUteList } from "./https/useGetAllUteList";
+import { BASE_IMAGE_URL } from "../../utils/exports";
 
 const ShipmentTable = () => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
@@ -107,7 +108,10 @@ const ShipmentTable = () => {
                     {faq?.fullName}
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap">
-                    {faq?.description}
+                    {faq?.description
+                      ? faq.description.split(" ").slice(0, 25).join(" ") +
+                        (faq.description.split(" ").length > 25 ? "..." : "")
+                      : "No description"}
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap">
                     {faq?.licenceNumber}
@@ -135,7 +139,7 @@ const ShipmentTable = () => {
                   </td>
                   <td className="px-4 py-2">
                     <img
-                      src={faq?.image}
+                      src={`${BASE_IMAGE_URL}/uteImages/${faq?.image}`}
                       alt="UTE"
                       className="w-12 h-12 md:w-16 md:h-16 object-cover rounded"
                     />

@@ -36,6 +36,25 @@ export const quoteendpoints = {
 export const shipmentendpoints = {
   ALL_SHIPMENT_DASHBOARD_LIST: BASE_URL + "/api/admin/all-quote-list",
   ALL_UTE_LIST: BASE_URL + "/api/admin/get-all-ute-list",
+  ALL_JOB_LIST: BASE_URL + "/api/admin/get-all-job-list",
+
+  SUSPEND_USER: BASE_URL + "/api/admin/user-job-suspended",
+  REVOKE_USER: BASE_URL + "/api/admin/user-job-revoked",
+
+  CREATE_FAQ: BASE_URL + "/api/admin/create-faq",
+
+  UPADTE_FAQ: BASE_URL + "/api/admin/get-all-job-list",
+
+  ALL_FAQ: BASE_URL + "/api/admin/all-faq",
+
+  CREATE_BLOG: BASE_URL + "/api/admin/create-blog",
+
+  UPADTE_BLOG: BASE_URL + "/api/admin/update-blog",
+
+  ALL_BLOG: BASE_URL + "/api/admin/all-blogs",
+
+  BLOG_DETAILS: BASE_URL + "/api/admin/blog-detaill",
+
   ALL_USER_LIST: BASE_URL + "/api/admin/all-users-data",
   ACTIVE_DEACTIVE: BASE_URL + "/api/admin/update-user-status",
 
@@ -46,9 +65,21 @@ export const shipmentendpoints = {
   SHIPMENT_DELEVERY_DETAIL: BASE_URL + "/api/admin/shipment-delivery-detail",
 };
 
+export const blogEndpoints = {
+  CREATE_BLOG: BASE_URL + "/api/admin/create-blog",
+
+  UPADTE_BLOG: BASE_URL + "/api/admin/update-blog",
+
+  ALL_BLOG: BASE_URL + "/api/admin/all-blogs",
+
+  BLOG_DETAILS: BASE_URL + "/api/admin/blog-detaill",
+
+  DELETE_BLOG: BASE_URL + "/api/admin/delete-blog",
+};
+
 export const faqendpoints = {
   POST_FAQ: BASE_URL + "/api/admin/create-faq",
-  FAQ_LIST: BASE_URL + "/api/admin/faq-list",
+  FAQ_LIST: BASE_URL + "/api/admin/all-faq",
   DELETE_FAQ: BASE_URL + "/api/admin/delete-faq",
   EDIT_FAQ: BASE_URL + "/api/admin/update-faq",
   SINGLE_FAQ: BASE_URL + "/api/admin/single-faq-detail",

@@ -1,170 +1,12 @@
-// import React, { useState, useEffect } from "react";
-// import DeleteModal from "../../utils/DeleteModal";
-// import FAQList from "./FaqList";
-// import FAQModal from "./FaqModal";
-// import { PostFaqMutation } from "./https/postfaqmutation";
-// import { useSelector } from "react-redux";
-// import { GetFaqList } from "./https/Getfaqlist";
-// import LoadingPage from "../../Loader";
-// import { DeleteFaq } from "./https/deletefaqs";
-// import { EditFaq } from "./https/updategaq";
-
-// const FaqForm = () => {
-//   const { token } = useSelector((state) => state.user);
-//   const [faqs, setFaqs] = useState([]);
-//   const [newQuestion, setNewQuestion] = useState("");
-//   const [newAnswer, setNewAnswer] = useState("");
-//   const [editingIndex, setEditingIndex] = useState(null);
-//   const [isAddModalOpen, setAddModalOpen] = useState(false);
-//   const [deleteIndex, setDeleteIndex] = useState(null);
-//   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-//   const [toggledIndex, setToggledIndex] = useState(null);
-//   const [isEdit, setIsEdit] = useState(false);
-//   const [editId, setEditId] = useState(null);
-//   const { mutateAsync: postfaqmutation, isPending: postPending } =
-//     PostFaqMutation();
-//   const { mutateAsync: deleteFaq } = DeleteFaq();
-//   const { mutateAsync: update } = EditFaq();
-//   const { data, isLoading, isError, error } = GetFaqList({ token });
-
-//   useEffect(() => {
-//     if (data) {
-//       setFaqs(data);
-//     }
-//   }, [data]);
-
-//   // useEffect(() => {
-//   //   const storedFaqs = JSON.parse(localStorage.getItem("faqs"));
-//   //   if (storedFaqs) {
-//   //     setFaqs(storedFaqs);
-//   //   }
-//   // }, []);
-
-//   useEffect(() => {
-//     localStorage.setItem("faqs", JSON.stringify(faqs));
-//   }, [faqs]);
-
-//   const toggleAccordion = (index) => {
-//     setToggledIndex(index === toggledIndex ? null : index);
-//   };
-
-//   const handleSaveFaq = async () => {
-//     if (newQuestion && newAnswer && !isEdit) {
-//       try {
-//         const faqSaveData = { question: newQuestion, answer: newAnswer };
-//         faqSaveData.token = token;
-//         await postfaqmutation(faqSaveData);
-//       } catch (error) {
-//         throw error;
-//       }
-//       setNewQuestion("");
-//       setNewAnswer("");
-//       setEditingIndex(null);
-//       setAddModalOpen(false);
-//     } else {
-//       try {
-//         const faqUpdateSaveData = { question: newQuestion, answer: newAnswer };
-//         faqUpdateSaveData.token = token;
-//         faqUpdateSaveData.id = editId;
-//         await update(faqUpdateSaveData);
-//       } catch (error) {
-//         throw error;
-//       }
-//       setNewQuestion("");
-//       setNewAnswer("");
-//       setEditingIndex(null);
-//       setAddModalOpen(false);
-//       setEditId(null);
-//       setIsEdit(false);
-//     }
-//   };
-
-//   const handleOpenEditForm = (id, index) => {
-//     setNewQuestion(faqs[index].question);
-//     setNewAnswer(faqs[index].answer);
-//     setEditingIndex(index);
-//     setEditId(id);
-//     setIsEdit(true);
-//     setAddModalOpen(true);
-//   };
-
-//   const handleOpenDeleteModal = (id) => {
-//     setDeleteIndex(id);
-//     setDeleteModalOpen(true);
-//   };
-
-//   const confirmDeleteFaq = async () => {
-//     await deleteFaq({ id: deleteIndex, token });
-//     setDeleteModalOpen(false);
-//     setDeleteIndex(null);
-//   };
-
-//   const handleReset = () => {
-//     setNewQuestion("");
-//     setNewAnswer("");
-//     setEditingIndex(null);
-//     setAddModalOpen(true);
-//     setEditId(null);
-//     setIsEdit(false);
-//   };
-
-//   // if (isLoading) {
-//   //   return <LoadingPage />;
-//   // }
-//   // if (isError) {
-//   //   return <p>{error?.response?.data?.message}</p>;
-//   // }
-
-//   return (
-//     <div className="mx-auto ">
-//       <div className="flex sm:flex-row flex-col justify-between items-center gap-2 mb-10">
-//         <h1 className="text-2xl font-semibold">Frequently Asked Questions</h1>
-//         <button
-//           className="text-white bg-[#BFA75D] font-medium mt-2 rounded-md text-md px-5 py-3"
-//           onClick={() => handleReset()}
-//         >
-//           Add FAQ
-//         </button>
-//       </div>
-
-//       <FAQList
-//         faqs={faqs}
-//         toggledIndex={toggledIndex}
-//         toggleAccordion={toggleAccordion}
-//         onEdit={handleOpenEditForm}
-//         setEditId={setEditId}
-//         onDelete={handleOpenDeleteModal}
-//       />
-
-//       {isAddModalOpen && (
-//         <FAQModal
-//           title={editingIndex !== null ? "Edit FAQ" : "Add a New FAQ"}
-//           question={newQuestion}
-//           answer={newAnswer}
-//           setQuestion={setNewQuestion}
-//           setAnswer={setNewAnswer}
-//           onSave={handleSaveFaq}
-//           onClose={() => setAddModalOpen(false)}
-//         />
-//       )}
-
-//       {isDeleteModalOpen && (
-//         <DeleteModal
-//           title="Confirm Delete"
-//           onClose={() => setDeleteModalOpen(false)}
-//           onConfirm={confirmDeleteFaq}
-//         >
-//           <p>Are you sure you want to delete this item?</p>
-//         </DeleteModal>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default FaqForm;
 import { useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
+import { usePostBlogMutation } from "./https/usePostBlogMutation";
+import { useUpdateBLogMutation } from "./https/useUpdateBLogMutation";
+import { useGetBlogList } from "./https/useGetBlogList";
+import Loader from "../../utils/Loader";
+import { useDeleteBlogMutation } from "./https/useDeleteBlogMutation";
+import { BASE_IMAGE_URL } from "../../utils/exports";
 
 const initialBlogs = [
   {
@@ -192,6 +34,7 @@ const initialBlogs = [
 const BlogPost = () => {
   const [blogs, setBlogs] = useState(initialBlogs);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalEditOpen, setModalEditOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newImage, setNewImage] = useState(null);
@@ -199,57 +42,50 @@ const BlogPost = () => {
   const [newViews, setNewViews] = useState(0);
   const [newComments, setNewComments] = useState(0);
   const [editingId, setEditingId] = useState(null);
+  const [file, setfile] = useState(null);
+
+  const { mutateAsync, isPending } = usePostBlogMutation();
+  const { mutateAsync: updateBlog, isPending: updatePending } =
+    useUpdateBLogMutation();
+
+  const { mutateAsync: deleteBlog, isPending: deletePending } =
+    useDeleteBlogMutation();
+
+  const { data, isLoading } = useGetBlogList();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setfile(file);
       setNewImage(URL.createObjectURL(file));
     }
   };
 
   const handleSaveBlog = () => {
-    if (editingId !== null) {
-      setBlogs((prev) =>
-        prev.map((blog) =>
-          blog.id === editingId
-            ? {
-                ...blog,
-                title: newTitle,
-                description: newDescription,
-                image: newImage,
-                user: newUser,
-                views: newViews,
-                comments: newComments,
-              }
-            : blog
-        )
-      );
-    } else {
-      const newBlog = {
-        id: Date.now(),
-        title: newTitle,
-        description: newDescription,
-        postedAt: new Date().toLocaleDateString(),
-        views: newViews,
-        comments: newComments,
-        image: newImage || "https://via.placeholder.com/100",
-        user: newUser || "Anonymous",
-      };
-      setBlogs([...blogs, newBlog]);
-    }
-    setNewTitle("");
-    setNewDescription("");
-    setNewImage(null);
-    setNewUser("");
-    setNewViews(0);
-    setNewComments(0);
-    setEditingId(null);
-    setModalOpen(false);
+    const formData = new FormData();
+
+    formData.append("title", newTitle);
+    formData.append("description", newDescription);
+    formData.append("blogImg", file);
+    formData.append("user", newUser);
+    formData.append("views", newViews);
+    formData.append("comments", newComments);
+
+    mutateAsync(formData).then(() => {
+      setNewTitle("");
+      setNewDescription("");
+      setNewImage(null);
+      setNewUser("");
+      setNewViews(0);
+      setNewComments(0);
+      setEditingId(null);
+      setModalOpen(false);
+    });
   };
 
-  const handleEditBlog = () => {
-    setModalOpen(true);
-    const blog = blogs.find((blog) => blog.id === id);
+  const handleEditBlog = (id) => {
+    setModalEditOpen(true);
+    const blog = data?.find((blog) => blog._id === id);
 
     if (blog) {
       setNewTitle(blog.title);
@@ -258,10 +94,39 @@ const BlogPost = () => {
       setNewUser(blog.user);
       setNewViews(blog.views);
       setNewComments(blog.comments);
-      setEditingId(id);
-      console.log("Opening modal for blog ID:", id); // Debugging ke liye
+      setEditingId(blog._id);
+      console.log("Opening modal for blog ID:", id);
     }
   };
+
+  const handleUpdateBlog = () => {
+    console.log("ndsjkn");
+    const formData = new FormData();
+    formData.append("title", newTitle);
+    formData.append("description", newDescription);
+    formData.append("blogImg", file);
+    formData.append("user", newUser);
+    formData.append("views", newViews);
+    formData.append("comments", newComments);
+
+    const newData = {
+      id: editingId,
+      formData: formData,
+    };
+
+    updateBlog(newData).then(() => {
+      setEditingId(null);
+      setModalEditOpen(false);
+    });
+  };
+
+  const handleDeleteBlog = (id) => {
+    deleteBlog(id);
+  };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="w-full p-6 rounded-lg">
@@ -282,37 +147,48 @@ const BlogPost = () => {
             <th className="p-2">Description</th>
             <th className="p-2">Posted At</th>
             <th className="p-2">Number of views</th>
-            <th className="p-2">Number of comments</th>
+            {/* <th className="p-2">Number of comments</th> */}
             <th className="p-2">Blog image</th>
             <th className="p-2">Blog user</th>
             <th className="p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {blogs.map((blog) => (
+          {data?.map((blog) => (
             <tr key={blog.id} className="border-t border-gray-300 text-center">
-              <td className="p-2">{blog.title}</td>
-              <td className="p-2">{blog.description}</td>
-              <td className="p-2">{blog.postedAt}</td>
-              <td className="p-2">{blog.views}</td>
-              <td className="p-2">{blog.comments}</td>
+              <td className="p-2">{blog?.title}</td>
+              <td className="p-2">
+                {blog?.description
+                  ? blog.description.split(" ").slice(0, 25).join(" ") +
+                    (blog.description.split(" ").length > 25 ? "..." : "")
+                  : "No description"}
+              </td>
+              <td className="p-2">
+                {blog?.createdAt
+                  ? new Date(blog.createdAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })
+                  : "No date"}
+              </td>
+              <td className="p-2">{blog?.views}</td>
+              {/* <td className="p-2">{blog?.comments}</td> */}
               <td className="p-2">
                 <img
-                  src={blog.image}
+                  src={`${BASE_IMAGE_URL}/blogImg/${blog.blogImg[0]}`}
                   alt="Blog"
                   className="w-16 h-16 object-cover rounded"
                 />
               </td>
-              <td className="p-2">{blog.user}</td>
+              <td className="p-2">{blog?.user}</td>
               <td className="p-2 flex justify-center space-x-2">
                 <FaEdit
-                  onClick={() => handleEditBlog(blog.id)}
+                  onClick={() => handleEditBlog(blog?._id)}
                   className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl"
                 />
                 <AiFillDelete
-                  onClick={() =>
-                    setBlogs(blogs.filter((b) => b.id !== blog.id))
-                  }
+                  onClick={() => handleDeleteBlog(blog?._id)}
                   className="text-red-600 hover:text-red-800 cursor-pointer text-xl"
                 />
               </td>
@@ -357,7 +233,7 @@ const BlogPost = () => {
                 onClick={handleSaveBlog}
                 className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284] py-2 px-4 rounded"
               >
-                Save
+                {isPending ? "Saving..." : "Save"}
               </button>
               <button
                 onClick={() => setModalOpen(false)}
@@ -369,6 +245,55 @@ const BlogPost = () => {
           </div>
         </div>
       )}
+
+      {isModalEditOpen ? (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center p-4">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4">
+              {editingId !== null ? "Edit Blog" : "Add a New Blog"}
+            </h2>
+            <input
+              type="text"
+              className="w-full p-2 border rounded mb-3"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              placeholder="Enter Title"
+            />
+            <textarea
+              className="w-full p-2 border rounded mb-3"
+              value={newDescription}
+              onChange={(e) => setNewDescription(e.target.value)}
+              placeholder="Enter Description"
+            ></textarea>
+            <input
+              type="file"
+              className="w-full p-2 border rounded mb-3"
+              onChange={handleImageChange}
+            />
+            <input
+              type="text"
+              className="w-full p-2 border rounded mb-3"
+              value={newUser}
+              onChange={(e) => setNewUser(e.target.value)}
+              placeholder="Enter User Name"
+            />
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={handleUpdateBlog}
+                className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284] py-2 px-4 rounded"
+              >
+                {updatePending ? "Updateting..." : "Update"}
+              </button>
+              <button
+                onClick={() => setModalEditOpen(false)}
+                className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };

@@ -1,11 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-import { BASE_URL, UTE_BASE_URL } from "../../api/apiUrl";
-
-import { useNavigate } from "react-router-dom";
-import { setUteJobId } from "../../../redux/slices/jobSlice";
-import { useAppDispatch } from "../../../redux/typedReduxHooks";
 import { shipmentendpoints } from "../../../../services/apis";
 import axiosInstance from "../../../../services/axios";
 
@@ -16,7 +11,7 @@ async function ActiveDeactiveMutation(input) {
   );
 }
 
-const useActiveDeactiveMutation = () => {
+const useActiveMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -24,7 +19,7 @@ const useActiveDeactiveMutation = () => {
 
     onSuccess: async (res) => {
       queryClient.invalidateQueries({
-        queryKey: ["ActiveDeactiveMutation"],
+        queryKey: [shipmentendpoints.ALL_USER_LIST],
         refetchType: "all",
       });
 
@@ -40,4 +35,4 @@ const useActiveDeactiveMutation = () => {
   });
 };
 
-export default useActiveDeactiveMutation;
+export default useActiveMutation;

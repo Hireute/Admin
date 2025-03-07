@@ -39,7 +39,7 @@ export const shipmentendpoints = {
   ALL_JOB_LIST: BASE_URL + "/api/admin/get-all-job-list",
 
   SUSPEND_USER: BASE_URL + "/api/admin/user-job-suspended",
-  REVOKE_USER: BASE_URL + "/api/admin/user-job-revoked",
+  REVOKE_USER: BASE_URL + "/api/admin/user-job-approved",
 
   CREATE_FAQ: BASE_URL + "/api/admin/create-faq",
 

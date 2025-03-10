@@ -6,7 +6,9 @@ import axiosInstance from "../../../../services/axios";
 
 async function revokeMutation(input) {
   console.log("hello");
-  return axiosInstance.delete(`${shipmentendpoints.REVOKE_USER}/${input}`);
+  return axiosInstance.patch(
+    `${shipmentendpoints.REVOKE_USER}/${input.id}?status=${input.status}`
+  );
 }
 
 const useRevokeMutation = () => {

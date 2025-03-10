@@ -94,7 +94,12 @@ const JobList = () => {
 
   const handleApproveFaq = (id) => {
     setPendingActions((prev) => ({ ...prev, [`approve-${id}`]: true }));
-    approveMutate(id, {
+    const newData = {
+      id,
+
+      status: "Approved",
+    };
+    approveMutate(newData, {
       onSuccess: () => {
         setFaqs((prev) =>
           prev.map((faq) =>
@@ -110,7 +115,13 @@ const JobList = () => {
 
   const handleRejectFaq = (id) => {
     setPendingActions((prev) => ({ ...prev, [`reject-${id}`]: true }));
-    rejectMutate(id, {
+
+    const newData = {
+      id,
+
+      status: "reject",
+    };
+    approveMutate(newData, {
       onSuccess: () => {
         setFaqs((prev) =>
           prev.map((faq) =>

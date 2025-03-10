@@ -153,7 +153,7 @@ const ShipmentTable = () => {
                   </td>
                   <td className="px-4 py-2">
                     <img
-                      src={`${BASE_IMAGE_URL}/uteImages/${faq?.image}`}
+                      src={`${BASE_IMAGE_URL}/uteImages/${faq?.uteImages[0]}`}
                       alt="UTE"
                       className="w-12 h-12 md:w-16 md:h-16 object-cover rounded"
                     />
@@ -339,7 +339,9 @@ const ShipmentTable = () => {
                 <strong>Budget:</strong> ${viewingFaq?.budget}
               </p>
               <img
-                src={`${BASE_IMAGE_URL}/uteImages/${viewingFaq?.image}`}
+                src={`${BASE_IMAGE_URL}/uteImages/${viewingFaq?.uteImages?.map(
+                  (item) => item
+                )}`}
                 alt="UTE"
                 className="w-full max-w-[200px] object-cover rounded"
               />

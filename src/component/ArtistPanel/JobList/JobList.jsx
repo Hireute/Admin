@@ -191,7 +191,11 @@ const JobList = () => {
             paginatedData.map((faq) => (
               <tr key={faq.id} className="border-t text-center">
                 <td className="p-2">{faq?.title}</td>
-                <td className="p-2">{faq?.description}</td>
+                <td>
+                  {faq?.description.split(" ").slice(0, 25).join(" ") +
+                    (faq.description.split(" ").length > 25 ? "..." : "")}
+                </td>
+
                 <td className="p-2">{faq?.state}</td>
                 <td className="p-2">{faq?.location}</td>
                 <td className="p-2">{faq?.workSchedule?.join(", ")}</td>
@@ -308,9 +312,11 @@ const JobList = () => {
               </p>
               {selectedJob.jobImg?.length > 0 && (
                 <div>
-                  <strong>Ute Image:</strong>
+                  <strong>Job Image:</strong>
                   <img
-                    src={selectedJob.jobImg[0]}
+                    src={`${BASE_IMAGE_URL}/jobImg/${selectedJob.jobImg?.map(
+                      (item) => item
+                    )}`}
                     alt="Job"
                     className="w-32 h-32 object-cover rounded mt-2"
                   />

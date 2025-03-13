@@ -10,7 +10,7 @@ const initialFAQs = [
     uteName: "Heavy-duty UTE for transportation",
     uteModel: "Toyota Hilux",
     location: "California",
-    uteModel: "Toyota Hilux",
+
     utePrice: "20000",
     paymentStatus: "Completed",
     image:

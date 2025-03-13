@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { AiFillDelete, AiFillEye } from "react-icons/ai";
-import { FaEdit } from "react-icons/fa";
+import { AiFillEye } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { useGetAllUteList } from "./https/useGetAllUteList";
 import { BASE_IMAGE_URL } from "../../utils/exports";
+import useGetApproveRejectMutaion from "./https/useGetApproveRejectMutaion";
 
 const ShipmentTable = () => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
@@ -12,6 +12,7 @@ const ShipmentTable = () => {
   const [viewingFaq, setViewingFaq] = useState(null);
   const [newImage, setNewImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [pendingAction, setPendingAction] = useState(null); // Track which action is pending
   const itemsPerPage = 10;
 
   const {
@@ -35,7 +36,11 @@ const ShipmentTable = () => {
         prev.map((faq) => (faq.id === editingId ? { ...faq, ...data } : faq))
       );
     } else {
-      const newFaq = { id: String(Date.now()), ...data };
+      const newFaq = {
+        id: String(Date.now()),
+        ...data,
+        status: "Pending",
+      };
       setFaqs([...faqs, newFaq]);
     }
     reset();
@@ -61,13 +66,26 @@ const ShipmentTable = () => {
     }
   };
 
-  const handleDeleteFaq = (id) => {
-    setFaqs(faqs.filter((faq) => faq.id !== id));
-  };
-
   const handleViewFaq = (faq) => {
     setViewingFaq(faq);
     setViewModalOpen(true);
+  };
+
+  const { mutateAsync, isPending } = useGetApproveRejectMutaion();
+
+  const handleStatusChange = (id, status) => {
+    setPendingAction({ id, status });
+    const newData = {
+      id: id,
+      status: status,
+    };
+
+    mutateAsync(newData).then(() => {
+      setPendingAction(null);
+      // setFaqs((prev) =>
+      //   prev.map((faq) => (faq.id === id ? { ...faq, status } : faq))
+      // );
+    });
   };
 
   const handlePageChange = (page) => {
@@ -80,12 +98,6 @@ const ShipmentTable = () => {
     <div className="container mx-auto p-4 md:p-6">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h1 className="text-xl md:text-2xl font-bold mb-4 sm:mb-0">Ute List</h1>
-        <button
-          className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284] font-semibold py-2 px-4 rounded-md transition-colors"
-          onClick={() => setAddModalOpen(true)}
-        >
-          Add User
-        </button>
       </div>
 
       <div className="overflow-x-auto">
@@ -104,6 +116,7 @@ const ShipmentTable = () => {
                 "Availability",
                 "Budget",
                 "Image",
+                "Status",
                 "Actions",
               ].map((heading, index) => (
                 <th
@@ -124,8 +137,8 @@ const ShipmentTable = () => {
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap">
                     {faq?.description
-                      ? faq.description.split(" ").slice(0, 10).join(" ") +
-                        (faq.description.split(" ").length > 10 ? "..." : "")
+                      ? faq.description.split(" ").slice(0, 6).join(" ") +
+                        (faq.description.split(" ").length > 6 ? "..." : "")
                       : "No description"}
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap">
@@ -147,7 +160,6 @@ const ShipmentTable = () => {
                     {faq?.chesisNumber}
                   </td>
                   <td className="px-4 py-2">{faq?.uteAvailble.join(" ")}</td>
-
                   <td className="px-4 py-2 whitespace-nowrap">
                     ${faq?.budget}
                   </td>
@@ -158,25 +170,62 @@ const ShipmentTable = () => {
                       className="w-12 h-12 md:w-16 md:h-16 object-cover rounded"
                     />
                   </td>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    <span
+                      className={`px-2 py-1 rounded ${
+                        faq?.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : faq?.status === "Rejected"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      {faq?.status || "Pending"}
+                    </span>
+                  </td>
                   <td className="px-4 py-2 flex space-x-2 whitespace-nowrap">
                     <AiFillEye
                       onClick={() => handleViewFaq(faq)}
                       className="text-blue-600 text-xl md:text-2xl cursor-pointer hover:opacity-75"
                     />
-                    <FaEdit
-                      onClick={() => handleEditFaq(faq?.id)}
-                      className="text-[#7F0284] text-xl md:text-2xl cursor-pointer hover:opacity-75"
-                    />
-                    <AiFillDelete
-                      onClick={() => handleDeleteFaq(faq?.id)}
-                      className="text-red-600 text-xl md:text-2xl cursor-pointer hover:opacity-75"
-                    />
+                    <button
+                      onClick={() => handleStatusChange(faq._id, "Approved")}
+                      className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-sm disabled:opacity-50"
+                      disabled={
+                        faq?.status === "Approved" ||
+                        (isPending &&
+                          pendingAction?.id === faq._id &&
+                          pendingAction?.status === "Approved")
+                      }
+                    >
+                      {isPending &&
+                      pendingAction?.id === faq._id &&
+                      pendingAction?.status === "Approved"
+                        ? "Approving..."
+                        : "Approve"}
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange(faq._id, "Rejected")}
+                      className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-sm disabled:opacity-50"
+                      disabled={
+                        faq?.status === "Rejected" ||
+                        (isPending &&
+                          pendingAction?.id === faq._id &&
+                          pendingAction?.status === "Rejected")
+                      }
+                    >
+                      {isPending &&
+                      pendingAction?.id === faq._id &&
+                      pendingAction?.status === "Rejected"
+                        ? "Rejecting..."
+                        : "Reject"}
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="12" className="text-center py-4">
+                <td colSpan="13" className="text-center py-4">
                   No Ute List
                 </td>
               </tr>
@@ -300,7 +349,6 @@ const ShipmentTable = () => {
         </div>
       )}
 
-      {/* View Details Modal */}
       {isViewModalOpen && viewingFaq && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
@@ -337,6 +385,20 @@ const ShipmentTable = () => {
               </p>
               <p>
                 <strong>Budget:</strong> ${viewingFaq?.budget}
+              </p>
+              <p>
+                <strong>Status:</strong>{" "}
+                <span
+                  className={`${
+                    viewingFaq?.status === "Approved"
+                      ? "text-green-600"
+                      : viewingFaq?.status === "Rejected"
+                      ? "text-red-600"
+                      : "text-yellow-600"
+                  }`}
+                >
+                  {viewingFaq?.status || "Pending"}
+                </span>
               </p>
               <img
                 src={`${BASE_IMAGE_URL}/uteImages/${viewingFaq?.uteImages?.map(

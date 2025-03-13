@@ -41,6 +41,8 @@ export const shipmentendpoints = {
   SUSPEND_USER: BASE_URL + "/api/admin/user-job-suspended",
   REVOKE_USER: BASE_URL + "/api/admin/user-job-approved",
 
+  APPROVE_REJECT_UTE: BASE_URL + "/api/admin/user-ute-status",
+
   CREATE_FAQ: BASE_URL + "/api/admin/create-faq",
 
   UPADTE_FAQ: BASE_URL + "/api/admin/get-all-job-list",

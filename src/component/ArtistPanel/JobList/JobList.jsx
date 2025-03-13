@@ -17,9 +17,9 @@ const JobList = () => {
   const [newImage, setNewImage] = useState(null);
   const [pendingActions, setPendingActions] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState(""); // Search state
-  const [budgetFilter, setBudgetFilter] = useState("none"); // Budget filter state
-  const itemsPerPage = 5;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [budgetFilter, setBudgetFilter] = useState("none");
+  const itemsPerPage = 10;
 
   const {
     register,
@@ -32,10 +32,7 @@ const JobList = () => {
   const { data, isLoading } = useGetAllJobUserList();
   const { mutate: approveMutate, isPending: approvePending } =
     useRevokeMutation();
-  const { mutate: rejectMutate, isPending: rejectPending } =
-    useSuspendMutation();
 
-  // Filter and sort data
   const filteredData = data?.data
     ?.filter((faq) =>
       faq?.title?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -49,7 +46,6 @@ const JobList = () => {
       return 0;
     });
 
-  // Pagination calculations
   const totalItems = filteredData?.length || 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const paginatedData = filteredData?.slice(
@@ -65,12 +61,12 @@ const JobList = () => {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to first page on search
+    setCurrentPage(1);
   };
 
   const handleBudgetFilter = (filter) => {
     setBudgetFilter(filter);
-    setCurrentPage(1); // Reset to first page on filter change
+    setCurrentPage(1);
   };
 
   const onSubmit = (data) => {
@@ -96,7 +92,6 @@ const JobList = () => {
     setPendingActions((prev) => ({ ...prev, [`approve-${id}`]: true }));
     const newData = {
       id,
-
       status: "Approved",
     };
     approveMutate(newData, {
@@ -115,10 +110,8 @@ const JobList = () => {
 
   const handleRejectFaq = (id) => {
     setPendingActions((prev) => ({ ...prev, [`reject-${id}`]: true }));
-
     const newData = {
       id,
-
       status: "reject",
     };
     approveMutate(newData, {
@@ -149,7 +142,7 @@ const JobList = () => {
             placeholder="Search by job title..."
             value={searchTerm}
             onChange={handleSearch}
-            className="px-4 py-2 w-[30vw] border rounded-md w-1/3"
+            className="px-4 py-2 w-[30vw] border rounded-md "
           />
           <select
             value={budgetFilter}
@@ -163,104 +156,103 @@ const JobList = () => {
         </div>
       </div>
 
-      {/* Search and Filter Controls */}
-
-      <table className="w-full border bg-white shadow-md rounded-lg">
-        <thead>
-          <tr className="bg-[#7F0284] text-white">
-            {[
-              "Job Title",
-              "Description",
-              "State",
-              "Service City",
-              "Shift",
-              "Budget",
-              "Ute Image",
-              "View", // Moved View after Ute Image
-              "Status",
-              "Actions",
-            ].map((heading, index) => (
-              <th key={index} className="px-4 py-3 whitespace-nowrap">
-                {heading}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedData?.length > 0 ? (
-            paginatedData.map((faq) => (
-              <tr key={faq.id} className="border-t text-center">
-                <td className="p-2">{faq?.title}</td>
-                <td>
-                  {faq?.description.split(" ").slice(0, 25).join(" ") +
-                    (faq.description.split(" ").length > 25 ? "..." : "")}
-                </td>
-
-                <td className="p-2">{faq?.state}</td>
-                <td className="p-2">{faq?.location}</td>
-                <td className="p-2">{faq?.workSchedule?.join(", ")}</td>
-                <td className="p-2">{faq?.budget}</td>
-                <td className="p-2">
-                  {faq?.jobImg?.[0] ? (
-                    <img
-                      src={`${BASE_IMAGE_URL}/jobImg/${faq.jobImg[0]}`}
-                      alt="Job"
-                      className="w-16 h-16 object-cover rounded"
+      {/* Wrap the table in a scrollable container */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full border bg-white shadow-md rounded-lg">
+          <thead>
+            <tr className="bg-[#7F0284] text-white">
+              {[
+                "Job Title",
+                "Description",
+                "State",
+                "Service City",
+                "Shift",
+                "Budget",
+                "Ute Image",
+                "View",
+                "Status",
+                "Actions",
+              ].map((heading, index) => (
+                <th key={index} className="px-4 py-3 whitespace-nowrap">
+                  {heading}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedData?.length > 0 ? (
+              paginatedData.map((faq) => (
+                <tr key={faq.id} className="border-t text-center">
+                  <td className="p-2">{faq?.title}</td>
+                  <td>
+                    {faq?.description.split(" ").slice(0, 3).join(" ") +
+                      (faq.description.split(" ").length > 3 ? "..." : "")}
+                  </td>
+                  <td className="p-2">{faq?.state}</td>
+                  <td className="p-2">{faq?.location}</td>
+                  <td className="p-2">{faq?.workSchedule?.join(", ")}</td>
+                  <td className="p-2">{faq?.budget}</td>
+                  <td className="p-2">
+                    {faq?.jobImg?.[0] ? (
+                      <img
+                        src={`${BASE_IMAGE_URL}/jobImg/${faq.jobImg[0]}`}
+                        alt="Job"
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                    ) : (
+                      "No Image"
+                    )}
+                  </td>
+                  <td className="p-2">
+                    <FaEye
+                      className="text-blue-500 cursor-pointer"
+                      onClick={() => handleViewJob(faq)}
                     />
-                  ) : (
-                    "No Image"
-                  )}
-                </td>
-                <td className="p-2">
-                  <FaEye
-                    className="text-blue-500 cursor-pointer"
-                    onClick={() => handleViewJob(faq)}
-                  />
-                </td>
-                <td className="p-2">
-                  <span
-                    className={`px-2 py-1 rounded ${
-                      faq?.status === "Approved"
-                        ? "bg-green-100 text-green-800"
-                        : faq?.status === "Rejected"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
-                  >
-                    {faq?.status || "Pending"}
-                  </span>
-                </td>
-                <td className="p-2 flex justify-center gap-3 items-center">
-                  <span
-                    onClick={() => handleApproveFaq(faq?._id)}
-                    className="px-2 border border-zinc-400 rounded-md py-2 font-semibold bg-green-500 text-white cursor-pointer"
-                  >
-                    {pendingActions[`approve-${faq?._id}`]
-                      ? "Approving..."
-                      : "Approve"}
-                  </span>
-                  <span
-                    onClick={() => handleRejectFaq(faq?._id)}
-                    className="px-2 border border-zinc-400 rounded-md py-2 font-semibold bg-red-500 text-white cursor-pointer"
-                  >
-                    {pendingActions[`reject-${faq?._id}`]
-                      ? "Rejecting..."
-                      : "Reject"}
-                  </span>
+                  </td>
+                  <td className="p-2">
+                    <span
+                      className={`px-2 py-1 rounded ${
+                        faq?.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : faq?.status === "Rejected"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      {faq?.status || "Pending"}
+                    </span>
+                  </td>
+                  <td className="p-2 flex justify-center gap-3 items-center">
+                    <span
+                      onClick={() => handleApproveFaq(faq?._id)}
+                      className="px-2 border border-zinc-400 rounded-md py-2 font-semibold bg-green-500 text-white cursor-pointer"
+                    >
+                      {pendingActions[`approve-${faq?._id}`]
+                        ? "Approving..."
+                        : "Approve"}
+                    </span>
+                    <span
+                      onClick={() => handleRejectFaq(faq?._id)}
+                      className="px-2 border border-zinc-400 rounded-md py-2 font-semibold bg-red-500 text-white cursor-pointer"
+                    >
+                      {pendingActions[`reject-${faq?._id}`]
+                        ? "Rejecting..."
+                        : "Reject"}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="10" className="p-4 text-center">
+                  No Jobs Listed
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="10" className="p-4 text-center">
-                No Jobs Listed
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
-      {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="flex justify-center gap-2 mt-4">
           <button
@@ -310,17 +302,23 @@ const JobList = () => {
               <p>
                 <strong>Status:</strong> {selectedJob.status || "Pending"}
               </p>
-              {selectedJob.jobImg?.length > 0 && (
+              {selectedJob.jobImg?.length > 0 ? (
                 <div>
-                  <strong>Job Image:</strong>
-                  <img
-                    src={`${BASE_IMAGE_URL}/jobImg/${selectedJob.jobImg?.map(
-                      (item) => item
-                    )}`}
-                    alt="Job"
-                    className="w-32 h-32 object-cover rounded mt-2"
-                  />
+                  <strong>Job Image(s):</strong>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {selectedJob.jobImg.map((item, index) => (
+                      <img
+                        key={index}
+                        src={`${BASE_IMAGE_URL}/jobImg/${item}`}
+                        alt={`Job Image ${index + 1}`}
+                        className="w-32 h-32 object-cover rounded"
+                        onError={(e) => (e.target.src = "/fallback-image.jpg")}
+                      />
+                    ))}
+                  </div>
                 </div>
+              ) : (
+                <div>No job images available.</div>
               )}
             </div>
             <button

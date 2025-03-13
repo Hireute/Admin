@@ -20,6 +20,7 @@ import { FaQuora } from "react-icons/fa";
 import { BsCardChecklist } from "react-icons/bs";
 import { GiMoneyStack } from "react-icons/gi";
 import { RiFileList3Line } from "react-icons/ri";
+import { FaRegQuestionCircle } from "react-icons/fa";
 export const sections = [
   {
     key: "dashboard",
@@ -56,6 +57,12 @@ export const sections = [
     icon: <GiMoneyStack size={28} />,
     label: "Payment History",
     path: "payment-history",
+  },
+  {
+    key: "queries",
+    icon: <FaRegQuestionCircle size={28} />,
+    label: "Queries",
+    path: "queries",
   },
   {
     key: "change-password",

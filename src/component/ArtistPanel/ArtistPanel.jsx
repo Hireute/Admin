@@ -11,6 +11,7 @@ import UsersList from "./UsersList/UsersList";
 import BookinList from "./Booking List/BookinList";
 import PaymenetHistory from "./PaymentHistory/PaymenetHistory";
 import ChangePassword from "./ChangePassword/ChangePassword";
+import Queries from "./Queries/Queries";
 
 const ArtistPanel = () => {
   return (
@@ -28,6 +29,8 @@ const ArtistPanel = () => {
           <Route path="faq" element={<FaqForm />} />
           <Route path="blogs" element={<BlogPost />} />
           <Route path="payment-history" element={<PaymenetHistory />} />
+          <Route path="queries" element={<Queries />} />
+
           <Route path="change-password" element={<ChangePassword />} />
           <Route path="all-users" element={<UsersList />} />
         </Routes>

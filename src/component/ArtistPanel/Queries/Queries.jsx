@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaReply, FaEye } from "react-icons/fa";
 import { useGetQueries } from "./https/useGetQueries";
 import Loader from "../../utils/Loader";
+import useReplyMutation from "./https/useReplyMutation";
 
 const Queries = () => {
   const [selectedQuery, setSelectedQuery] = useState(null);
@@ -13,7 +14,7 @@ const Queries = () => {
 
   const itemsPerPage = 10;
 
-  // Query parameters object for the API
+  // Query parameters for the API
   const queryParams = {
     page: currentPage,
     limit: itemsPerPage,
@@ -22,12 +23,12 @@ const Queries = () => {
   };
 
   const { data, isLoading } = useGetQueries(queryParams);
+  const { mutate: sendReply, isPending: isReplying } = useReplyMutation();
 
-  // Use the data from the hook if available, otherwise use empty defaults
+  // Use data from the hook or fallback to defaults
   const queriesData = data?.queries || [];
   const totalPages = data?.totalPages || 1;
 
-  // Filter and sort are handled server-side, so we just use the paginated data directly
   const paginatedQueries = queriesData;
 
   const truncateMessage = (message) => {
@@ -39,6 +40,7 @@ const Queries = () => {
 
   const handleReply = (query) => {
     setSelectedQuery(query);
+    setReplyMessage(""); // Reset reply message when opening modal
   };
 
   const handleView = (query) => {
@@ -46,10 +48,30 @@ const Queries = () => {
   };
 
   const handleSendReply = () => {
-    console.log("Sending reply to:", selectedQuery.email);
-    console.log("Message:", replyMessage);
-    setSelectedQuery(null);
-    setReplyMessage("");
+    if (!replyMessage.trim()) {
+      alert("Please enter a reply message");
+      return;
+    }
+
+    // Prepare the payload for the API
+    const replyData = {
+      queryId: selectedQuery._id,
+      reply: replyMessage,
+    };
+
+    // Send the reply using the mutation hook
+    sendReply(replyData, {
+      onSuccess: () => {
+        console.log("Reply sent successfully");
+        setSelectedQuery(null);
+        setReplyMessage("");
+        // Optionally refetch queries here if not handled by the hook
+      },
+      onError: (error) => {
+        console.error("Error sending reply:", error);
+        alert("Failed to send reply. Please try again.");
+      },
+    });
   };
 
   const handlePageChange = (page) => {
@@ -89,14 +111,25 @@ const Queries = () => {
               <th className="py-3 px-4 text-left">Phone</th>
               <th className="py-3 px-4 text-left">Message</th>
               <th className="py-3 px-4 text-left">Date</th>
+              <th className="py-3 px-4 text-left">Replies</th>
               <th className="py-3 px-4 text-left">Actions</th>
             </tr>
           </thead>
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <tbody>
-              {paginatedQueries.map((query) => (
+          <tbody>
+            {isLoading ? (
+              <tr>
+                <td colSpan="7" className="py-4">
+                  <Loader />
+                </td>
+              </tr>
+            ) : paginatedQueries.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="py-4 text-center text-gray-500">
+                  No queries found
+                </td>
+              </tr>
+            ) : (
+              paginatedQueries.map((query) => (
                 <tr key={query._id} className="border-b hover:bg-gray-50">
                   <td className="py-3 px-4">{`${query.firstName} ${query.lastName}`}</td>
                   <td className="py-3 px-4">{query.email}</td>
@@ -107,6 +140,7 @@ const Queries = () => {
                   <td className="py-3 px-4">
                     {new Date(query.date).toLocaleDateString()}
                   </td>
+                  <td className="py-3 px-4">{query.replies?.length || 0}</td>
                   <td className="py-3 px-4 flex gap-2">
                     <button
                       onClick={() => handleView(query)}
@@ -122,9 +156,9 @@ const Queries = () => {
                     </button>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          )}
+              ))
+            )}
+          </tbody>
         </table>
       </div>
 
@@ -171,7 +205,16 @@ const Queries = () => {
                 {new Date(viewQuery.date).toLocaleString()}
               </p>
               <p>
-                <strong>Replied:</strong> {viewQuery.replied ? "Yes" : "No"}
+                <strong>Replies:</strong>{" "}
+                {viewQuery.replies?.length > 0 ? (
+                  <ul className="list-disc list-inside">
+                    {viewQuery.replies.map((reply, index) => (
+                      <li key={index}>{reply}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  "No replies yet"
+                )}
               </p>
             </div>
             <button
@@ -206,27 +249,40 @@ const Queries = () => {
               </div>
               <div>
                 <label className="block text-gray-700 font-medium mb-1">
-                  Message:
+                  Original Query:
+                </label>
+                <div className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                  {selectedQuery.message}
+                </div>
+              </div>
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">
+                  Your Reply:
                 </label>
                 <textarea
                   value={replyMessage}
                   onChange={(e) => setReplyMessage(e.target.value)}
                   placeholder="Type your reply here..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#7F0284] transition-colors min-h-[120px] resize-y"
+                  disabled={isReplying}
                 />
               </div>
               <div className="flex gap-3 justify-end">
                 <button
                   onClick={() => setSelectedQuery(null)}
                   className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                  disabled={isReplying}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSendReply}
-                  className="px-4 py-2 bg-[#7F0284] text-white rounded-lg hover:bg-[#6B0270] transition-colors"
+                  className={`px-4 py-2 bg-[#7F0284] text-white rounded-lg hover:bg-[#6B0270] transition-colors flex items-center gap-2 ${
+                    isReplying ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  disabled={isReplying}
                 >
-                  Send Reply
+                  {isReplying ? <>Sending...</> : "Send Reply"}
                 </button>
               </div>
             </div>

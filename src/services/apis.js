@@ -50,6 +50,7 @@ export const shipmentendpoints = {
   ALL_FAQ: BASE_URL + "/api/admin/all-faq",
 
   ALL_QUERIES: BASE_URL + "/api/admin/all-queries",
+  REPLY_QUERIES: BASE_URL + "/api/admin/reply-query",
 
   CREATE_BLOG: BASE_URL + "/api/admin/create-blog",
 

@@ -19,7 +19,7 @@ async function fatchAllShipmentList({token,limit = 8, page = 1 }) {
 
 export function GetAllShipmentData({token,limit = 8, page = 1}) {
   return useQuery({
-    queryKey: [shipmentendpoints.ALL_SHIPMENT_DASHBOARD_LIST,{ limit, page }],
+    queryKey: ["kuch bhi nahi"],
     queryFn: () => fatchAllShipmentList({token,page,limit}),
   });
 }

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { AiFillEye } from "react-icons/ai";
+import { AiFillEye, AiFillDelete } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { useGetAllUteList } from "./https/useGetAllUteList";
 import { BASE_IMAGE_URL } from "../../utils/exports";
 import useGetApproveRejectMutaion from "./https/useGetApproveRejectMutaion";
+import useDeleteUte from "./https/useDeleteUte";
 
 const ShipmentTable = () => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
@@ -12,7 +13,7 @@ const ShipmentTable = () => {
   const [viewingFaq, setViewingFaq] = useState(null);
   const [newImage, setNewImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pendingAction, setPendingAction] = useState(null); // Track which action is pending
+  const [pendingAction, setPendingAction] = useState(null);
   const itemsPerPage = 10;
 
   const {
@@ -71,6 +72,13 @@ const ShipmentTable = () => {
     setViewModalOpen(true);
   };
 
+  const {mutate } =useDeleteUte()
+
+  const handleDeleteFaq = (id) => {
+    mutate(id)
+    console.log(`Deleting FAQ with ID: ${id}`);
+  };
+
   const { mutateAsync, isPending } = useGetApproveRejectMutaion();
 
   const handleStatusChange = (id, status) => {
@@ -82,9 +90,6 @@ const ShipmentTable = () => {
 
     mutateAsync(newData).then(() => {
       setPendingAction(null);
-      // setFaqs((prev) =>
-      //   prev.map((faq) => (faq.id === id ? { ...faq, status } : faq))
-      // );
     });
   };
 
@@ -220,6 +225,10 @@ const ShipmentTable = () => {
                         ? "Rejecting..."
                         : "Reject"}
                     </button>
+                    <AiFillDelete
+                      onClick={() => handleDeleteFaq(faq._id)}
+                      className="text-red-600 text-xl md:text-2xl cursor-pointer hover:opacity-75"
+                    />
                   </td>
                 </tr>
               ))
@@ -234,7 +243,6 @@ const ShipmentTable = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-4 space-x-2">
           <button

@@ -27,7 +27,7 @@ const Table = ({ shipmentData, currentPage, setCurrentPage, data }) => {
   const [deleteIndex, setDeleteIndex] = useState(null);
   const { token } = useSelector((state) => state.user);
 
-  const { mutateAsync, isPending } = DeleteShipment();
+  // const { mutateAsync, isPending } = DeleteShipment();
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -38,17 +38,17 @@ const Table = ({ shipmentData, currentPage, setCurrentPage, data }) => {
     setDeleteIndex(id);
   };
 
-  const confirmDeleteshipment = async () => {
-    await mutateAsync({ id: deleteIndex, token });
-    setDeleteModalOpen(false);
-    setDeleteIndex(null);
-  };
+  // const confirmDeleteshipment = async () => {
+  //   await mutateAsync({ id: deleteIndex, token });
+  //   setDeleteModalOpen(false);
+  //   setDeleteIndex(null);
+  // };
 
-  const confirmDelete = () => {
-    const updatedData = data.filter((_, index) => index !== deleteIndex);
-    setData(updatedData);
-    setDeleteModalOpen(false);
-  };
+  // const confirmDelete = () => {
+  //   const updatedData = data.filter((_, index) => index !== deleteIndex);
+  //   setData(updatedData);
+  //   setDeleteModalOpen(false);
+  // };
 
   return (
     <div className="rounded-lg mt-6">

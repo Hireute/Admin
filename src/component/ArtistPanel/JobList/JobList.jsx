@@ -7,6 +7,7 @@ import useRevokeMutation from "./https/useRevokeMutation";
 import useSuspendMutation from "./https/useSuspendMutation";
 import Loader from "../../utils/Loader";
 import { BASE_IMAGE_URL } from "../../utils/exports";
+import useDeleteJob from "./https/useDeleteJob";
 
 const JobList = () => {
   const [faqs, setFaqs] = useState([]);
@@ -128,6 +129,17 @@ const JobList = () => {
     });
   };
 
+  const {mutate } = useDeleteJob()
+  const handleDeleteFaq = (id) => {
+    mutate(id);
+   
+  };
+
+  // Helper function to format date
+  const formatDate = (dateString) => {
+    return dateString ? new Date(dateString).toLocaleDateString() : "N/A";
+  };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -156,7 +168,6 @@ const JobList = () => {
         </div>
       </div>
 
-      {/* Wrap the table in a scrollable container */}
       <div className="overflow-x-auto">
         <table className="min-w-full border bg-white shadow-md rounded-lg">
           <thead>
@@ -169,6 +180,7 @@ const JobList = () => {
                 "Shift",
                 "Budget",
                 "Ute Image",
+                "Created Date", // Added Created Date header
                 "View",
                 "Status",
                 "Actions",
@@ -185,8 +197,8 @@ const JobList = () => {
                 <tr key={faq.id} className="border-t text-center">
                   <td className="p-2">{faq?.title}</td>
                   <td>
-                    {faq?.description.split(" ").slice(0, 3).join(" ") +
-                      (faq.description.split(" ").length > 3 ? "..." : "")}
+                    {faq?.description?.split(" ").slice(0, 3).join(" ") +
+                      (faq?.description?.split(" ").length > 3 ? "..." : "")}
                   </td>
                   <td className="p-2">{faq?.state}</td>
                   <td className="p-2">{faq?.location}</td>
@@ -203,6 +215,7 @@ const JobList = () => {
                       "No Image"
                     )}
                   </td>
+                  <td className="p-2">{formatDate(faq?.createdAt)}</td> {/* Added Created Date column */}
                   <td className="p-2">
                     <FaEye
                       className="text-blue-500 cursor-pointer"
@@ -239,12 +252,16 @@ const JobList = () => {
                         ? "Rejecting..."
                         : "Reject"}
                     </span>
+                    <AiFillDelete
+                      className="text-red-500 cursor-pointer text-xl"
+                      onClick={() => handleDeleteFaq(faq?._id)}
+                    />
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="10" className="p-4 text-center">
+                <td colSpan="11" className="p-4 text-center">
                   No Jobs Listed
                 </td>
               </tr>
@@ -275,7 +292,6 @@ const JobList = () => {
         </div>
       )}
 
-      {/* View Modal */}
       {isViewModalOpen && selectedJob && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
@@ -298,6 +314,9 @@ const JobList = () => {
               </p>
               <p>
                 <strong>Budget:</strong> {selectedJob.budget}
+              </p>
+              <p>
+                <strong>Created Date:</strong> {formatDate(selectedJob.createdAt)} {/* Added to modal */}
               </p>
               <p>
                 <strong>Status:</strong> {selectedJob.status || "Pending"}

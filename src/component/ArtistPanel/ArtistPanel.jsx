@@ -21,7 +21,7 @@ const ArtistPanel = () => {
       </div>
       <div className="xl:w-[80%] lg:w-[78%] md:w-[88%] sm:w-[85%] w-[78%] container mx-auto mt-5">
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          {/* <Route path="/" element={<Dashboard />} /> */}
           <Route path="ute-list" element={<Shipment />} />
           <Route path="job-list" element={<JobList />} />
           <Route path="booking-list" element={<BookinList />} />

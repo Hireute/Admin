@@ -78,6 +78,10 @@ const FaqForm = () => {
   };
 
   const handleDeleteFaq = (id) => {
+
+    console.log(id)
+
+    
     deleteFaq(id);
   };
 

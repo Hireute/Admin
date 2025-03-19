@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { FaReply, FaEye } from "react-icons/fa";
+import { AiFillDelete } from "react-icons/ai"; // Added delete icon import
 import { useGetQueries } from "./https/useGetQueries";
 import Loader from "../../utils/Loader";
 import useReplyMutation from "./https/useReplyMutation";
+import useDeleteQueries from "./https/useDeleteQueries";
 
 const Queries = () => {
   const [selectedQuery, setSelectedQuery] = useState(null);
@@ -14,7 +16,6 @@ const Queries = () => {
 
   const itemsPerPage = 10;
 
-  // Query parameters for the API
   const queryParams = {
     page: currentPage,
     limit: itemsPerPage,
@@ -25,7 +26,6 @@ const Queries = () => {
   const { data, isLoading } = useGetQueries(queryParams);
   const { mutate: sendReply, isPending: isReplying } = useReplyMutation();
 
-  // Use data from the hook or fallback to defaults
   const queriesData = data?.queries || [];
   const totalPages = data?.totalPages || 1;
 
@@ -40,11 +40,17 @@ const Queries = () => {
 
   const handleReply = (query) => {
     setSelectedQuery(query);
-    setReplyMessage(""); // Reset reply message when opening modal
+    setReplyMessage("");
   };
 
   const handleView = (query) => {
     setViewQuery(query);
+  };
+
+
+  const {mutate} = useDeleteQueries()
+  const handleDelete = (queryId) => {
+    mutate(queryId);
   };
 
   const handleSendReply = () => {
@@ -53,19 +59,16 @@ const Queries = () => {
       return;
     }
 
-    // Prepare the payload for the API
     const replyData = {
       queryId: selectedQuery._id,
       reply: replyMessage,
     };
 
-    // Send the reply using the mutation hook
     sendReply(replyData, {
       onSuccess: () => {
         console.log("Reply sent successfully");
         setSelectedQuery(null);
         setReplyMessage("");
-        // Optionally refetch queries here if not handled by the hook
       },
       onError: (error) => {
         console.error("Error sending reply:", error);
@@ -82,7 +85,6 @@ const Queries = () => {
     <div className="max-w-6xl mx-auto px-4 py-10">
       <h2 className="text-3xl font-bold text-gray-800 mb-6">User Queries</h2>
 
-      {/* Search and Sort Controls */}
       <div className="mb-6 flex flex-col md:flex-row gap-4">
         <input
           type="text"
@@ -101,7 +103,6 @@ const Queries = () => {
         </select>
       </div>
 
-      {/* Queries Table */}
       <div className="overflow-x-auto bg-white rounded-xl shadow-lg">
         <table className="min-w-full">
           <thead>
@@ -154,6 +155,12 @@ const Queries = () => {
                     >
                       <FaReply /> Reply
                     </button>
+                    <button
+                      onClick={() => handleDelete(query._id)}
+                      className="flex items-center gap-2 bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition-colors"
+                    >
+                      <AiFillDelete />
+                    </button>
                   </td>
                 </tr>
               ))
@@ -162,7 +169,6 @@ const Queries = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       <div className="mt-4 flex justify-center gap-2">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
           <button
@@ -179,7 +185,6 @@ const Queries = () => {
         ))}
       </div>
 
-      {/* View Details Modal */}
       {viewQuery && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
@@ -227,7 +232,6 @@ const Queries = () => {
         </div>
       )}
 
-      {/* Reply Modal */}
       {selectedQuery && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">

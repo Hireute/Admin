@@ -40,22 +40,22 @@ const Dashboard = () => {
     }
   }, [data]);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(reportDatas.ADMIN_ReportData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setReportData(response.data);
-    } catch (error) {
-      throw error;
-    }
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await axios.get(reportDatas.ADMIN_ReportData, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     setReportData(response.data);
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   // if (isLoading) {
   //   return <LoadingPage />;

@@ -16,7 +16,7 @@ async function getAllUteList({ page = 1, limit = 10 } = {}) {
 
 export function useGetAllUserList({ page = 1, limit = 10 } = {}) {
   return useQuery({
-    queryKey: [shipmentendpoints.ALL_USER_LIST],
+    queryKey: [shipmentendpoints.ALL_USER_LIST, page, limit],
     queryFn: () => getAllUteList({ page, limit }),
   });
 }

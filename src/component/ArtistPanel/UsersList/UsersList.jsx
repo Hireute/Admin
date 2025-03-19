@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { useGetAllUserList } from "./https/useGetAllUserList";
 import useActiveMutation from "./https/useActiveMutation";
 import Loader from "../../utils/Loader";
+import { AiFillDelete } from "react-icons/ai"; // Added delete icon import
+import useDeleteUser from "./https/useDeleteUser";
 
 const initialFAQs = [
   {
@@ -29,8 +31,8 @@ const UsersList = () => {
   const [editingId, setEditingId] = useState(null);
   const [pendingId, setPendingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1); // Added for pagination
-  const limit = 10; // Items per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
 
   const {
     register,
@@ -65,6 +67,17 @@ const UsersList = () => {
     setEditingId(null);
   };
 
+  const {mutate} = useDeleteUser()
+  const handleDeleteUser = (id) => {
+    mutate(id)
+   
+  };
+
+  // Helper function to format date
+  const formatDate = (dateString) => {
+    return dateString ? new Date(dateString).toLocaleDateString() : "N/A";
+  };
+
   const filteredUsers = data?.data?.filter((faq) =>
     faq?.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -92,7 +105,7 @@ const UsersList = () => {
             placeholder="Search by email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-4 py-2 w-[50vw]  border rounded-md focus:outline-none focus:ring-2 focus:ring-[#7F0284]"
+            className="px-4 py-2 w-[50vw] border rounded-md focus:outline-none focus:ring-2 focus:ring-[#7F0284]"
           />
         </div>
       </div>
@@ -104,6 +117,7 @@ const UsersList = () => {
             <th className="p-2">Email</th>
             <th className="p-2">Address</th>
             <th className="p-2">Mobile Number</th>
+            <th className="p-2">Created Date</th> {/* Added Created Date */}
             <th className="p-2">Status</th>
             <th className="p-2">Actions</th>
           </tr>
@@ -116,6 +130,7 @@ const UsersList = () => {
                 <td className="p-2">{faq?.email}</td>
                 <td className="p-2">{faq?.address}</td>
                 <td className="p-2">{faq?.phoneNumber}</td>
+                <td className="p-2">{formatDate(faq?.createdAt)}</td> {/* Added Created Date */}
                 <td className="p-2">
                   <span
                     className={
@@ -125,7 +140,7 @@ const UsersList = () => {
                     {faq?.isActive === true ? "Active" : "Deactive"}
                   </span>
                 </td>
-                <td className="p-2">
+                <td className="p-2 flex justify-center gap-2 items-center">
                   <button
                     className={`text-white text-sm rounded-md transition duration-200 ${
                       faq?.isActive
@@ -142,12 +157,16 @@ const UsersList = () => {
                       ? "Deactivate"
                       : "Activate"}
                   </button>
+                  <AiFillDelete
+                    className="text-red-600 cursor-pointer text-xl hover:text-red-800"
+                    onClick={() => handleDeleteUser(faq._id)}
+                  />
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={6} className="p-2 text-center">
+              <td colSpan={7} className="p-2 text-center">
                 {searchTerm ? "No matching users found" : "No Users Yet"}
               </td>
             </tr>
@@ -155,7 +174,6 @@ const UsersList = () => {
         </tbody>
       </table>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-4 flex justify-center items-center gap-2">
           <button
@@ -166,7 +184,6 @@ const UsersList = () => {
             Previous
           </button>
 
-          {/* Page numbers */}
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <button
               key={page}

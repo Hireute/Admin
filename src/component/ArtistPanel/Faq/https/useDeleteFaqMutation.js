@@ -4,8 +4,10 @@ import toast from "react-hot-toast";
 import axiosInstance from "../../../../services/axios";
 import { faqendpoints } from "../../../../services/apis";
 
-async function FaqDelete({ id }) {
-  return axiosInstance.delete(faqendpoints.DELETE_FAQ + `/${id}`);
+async function FaqDelete( id ) {
+
+  console.log("this is from mutation" +id)
+  return axiosInstance.delete(`${faqendpoints.DELETE_FAQ}/${id}`);
 }
 
 export const useDeleteFaqMutation = () => {

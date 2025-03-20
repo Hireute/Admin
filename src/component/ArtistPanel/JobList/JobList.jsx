@@ -20,7 +20,6 @@ const JobList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [budgetFilter, setBudgetFilter] = useState("none");
-  const itemsPerPage = 10;
 
   const {
     register,
@@ -30,11 +29,21 @@ const JobList = () => {
     formState: { errors },
   } = useForm();
 
-  const { data, isLoading } = useGetAllJobUserList();
-  const { mutate: approveMutate, isPending: approvePending } =
-    useRevokeMutation();
+  // Pass currentPage as part of the query key to ensure refetching
+  const { data, isLoading, isFetching } = useGetAllJobUserList({ page: currentPage , limit: 10 });
 
-  const filteredData = data?.data
+  const { mutate: approveMutate, isPending: approvePending } = useRevokeMutation();
+
+  const paginatedData = data?.data || [];
+  const totalCount = data?.totalCount || 0;
+  const paginationInfo = data?.paginationData || {};
+  const totalPages = paginationInfo?.totalPages || Math.ceil(totalCount / (paginationInfo?.limit || 10));
+
+
+
+  console.log(data)
+
+  const filteredData = paginatedData
     ?.filter((faq) =>
       faq?.title?.toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -47,15 +56,10 @@ const JobList = () => {
       return 0;
     });
 
-  const totalItems = filteredData?.length || 0;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const paginatedData = filteredData?.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
+
+      console.log("chnaged")
       setCurrentPage(page);
     }
   };
@@ -91,10 +95,7 @@ const JobList = () => {
 
   const handleApproveFaq = (id) => {
     setPendingActions((prev) => ({ ...prev, [`approve-${id}`]: true }));
-    const newData = {
-      id,
-      status: "Approved",
-    };
+    const newData = { id, status: "Approved" };
     approveMutate(newData, {
       onSuccess: () => {
         setFaqs((prev) =>
@@ -111,10 +112,7 @@ const JobList = () => {
 
   const handleRejectFaq = (id) => {
     setPendingActions((prev) => ({ ...prev, [`reject-${id}`]: true }));
-    const newData = {
-      id,
-      status: "reject",
-    };
+    const newData = { id, status: "reject" };
     approveMutate(newData, {
       onSuccess: () => {
         setFaqs((prev) =>
@@ -129,13 +127,11 @@ const JobList = () => {
     });
   };
 
-  const {mutate } = useDeleteJob()
+  const { mutate } = useDeleteJob();
   const handleDeleteFaq = (id) => {
     mutate(id);
-   
   };
 
-  // Helper function to format date
   const formatDate = (dateString) => {
     return dateString ? new Date(dateString).toLocaleDateString() : "N/A";
   };
@@ -154,7 +150,7 @@ const JobList = () => {
             placeholder="Search by job title..."
             value={searchTerm}
             onChange={handleSearch}
-            className="px-4 py-2 w-[30vw] border rounded-md "
+            className="px-4 py-2 w-[30vw] border rounded-md"
           />
           <select
             value={budgetFilter}
@@ -168,6 +164,9 @@ const JobList = () => {
         </div>
       </div>
 
+      {/* Show loading indicator when fetching new page data */}
+      {isFetching && <div className="text-center py-2">Loading...</div>}
+
       <div className="overflow-x-auto">
         <table className="min-w-full border bg-white shadow-md rounded-lg">
           <thead>
@@ -180,7 +179,7 @@ const JobList = () => {
                 "Shift",
                 "Budget",
                 "Ute Image",
-                "Created Date", // Added Created Date header
+                "Created Date",
                 "View",
                 "Status",
                 "Actions",
@@ -192,8 +191,8 @@ const JobList = () => {
             </tr>
           </thead>
           <tbody>
-            {paginatedData?.length > 0 ? (
-              paginatedData.map((faq) => (
+            {filteredData?.length > 0 ? (
+              filteredData.map((faq) => (
                 <tr key={faq.id} className="border-t text-center">
                   <td className="p-2">{faq?.title}</td>
                   <td>
@@ -215,7 +214,7 @@ const JobList = () => {
                       "No Image"
                     )}
                   </td>
-                  <td className="p-2">{formatDate(faq?.createdAt)}</td> {/* Added Created Date column */}
+                  <td className="p-2">{formatDate(faq?.createdAt)}</td>
                   <td className="p-2">
                     <FaEye
                       className="text-blue-500 cursor-pointer"
@@ -274,7 +273,7 @@ const JobList = () => {
         <div className="flex justify-center gap-2 mt-4">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            disabled={!paginationInfo?.hasPrevious || isFetching}
             className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
           >
             Previous
@@ -284,7 +283,7 @@ const JobList = () => {
           </span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            disabled={!paginationInfo?.hasNext || isFetching}
             className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
           >
             Next
@@ -316,7 +315,7 @@ const JobList = () => {
                 <strong>Budget:</strong> {selectedJob.budget}
               </p>
               <p>
-                <strong>Created Date:</strong> {formatDate(selectedJob.createdAt)} {/* Added to modal */}
+                <strong>Created Date:</strong> {formatDate(selectedJob.createdAt)}
               </p>
               <p>
                 <strong>Status:</strong> {selectedJob.status || "Pending"}

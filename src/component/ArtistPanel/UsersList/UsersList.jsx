@@ -79,8 +79,11 @@ const UsersList = () => {
   };
 
   const filteredUsers = data?.data?.filter((faq) =>
-    faq?.email.toLowerCase().includes(searchTerm.toLowerCase())
+    faq?.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+
+
 
   const totalItems = data?.total || 0;
   const totalPages = Math.ceil(totalItems / limit);

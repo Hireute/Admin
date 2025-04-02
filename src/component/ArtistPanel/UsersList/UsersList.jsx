@@ -73,7 +73,7 @@ const UsersList = () => {
    
   };
 
-  // Helper function to format date
+ 
   const formatDate = (dateString) => {
     return dateString ? new Date(dateString).toLocaleDateString() : "N/A";
   };
@@ -120,7 +120,7 @@ const UsersList = () => {
             <th className="p-2">Email</th>
             <th className="p-2">Address</th>
             <th className="p-2">Mobile Number</th>
-            <th className="p-2">Created Date</th> {/* Added Created Date */}
+            <th className="p-2">Created Date</th> 
             <th className="p-2">Status</th>
             <th className="p-2">Actions</th>
           </tr>
@@ -133,7 +133,7 @@ const UsersList = () => {
                 <td className="p-2">{faq?.email}</td>
                 <td className="p-2">{faq?.address}</td>
                 <td className="p-2">{faq?.phoneNumber}</td>
-                <td className="p-2">{formatDate(faq?.createdAt)}</td> {/* Added Created Date */}
+                <td className="p-2">{formatDate(faq?.createdAt)}</td> 
                 <td className="p-2">
                   <span
                     className={

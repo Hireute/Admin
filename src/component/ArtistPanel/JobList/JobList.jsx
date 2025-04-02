@@ -164,8 +164,7 @@ const JobList = () => {
         </div>
       </div>
 
-      {/* Show loading indicator when fetching new page data */}
-      {isFetching && <div className="text-center py-2">Loading...</div>}
+      {isFetching && <div className="text-center py-2"><Loader/></div>}
 
       <div className="overflow-x-auto">
         <table className="min-w-full border bg-white shadow-md rounded-lg">

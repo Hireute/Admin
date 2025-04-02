@@ -6,7 +6,7 @@ import axiosInstance from "../../../../services/axios";
 
 async function deleteQueriesMutation(input) {
  
-  return axiosInstance.delete(
+  return axiosInstance.put(
     `${shipmentendpoints.DELETE_QUERIES}/${input}`
   );
 }

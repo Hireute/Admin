@@ -6,7 +6,7 @@ import axiosInstance from "../../../../services/axios";
 
 async function deleteUteMutation(input) {
  
-  return axiosInstance.delete(
+  return axiosInstance.put(
     `${shipmentendpoints.DELETE_UTE}/${input}`
   );
 }

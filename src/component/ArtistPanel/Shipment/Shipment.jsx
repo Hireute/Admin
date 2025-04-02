@@ -29,7 +29,7 @@ const ShipmentTable = () => {
     limit: itemsPerPage,
   });
 
-  const totalPages = Math.ceil((data?.total || 0) / itemsPerPage);
+  const totalPages = Math.ceil((data?.totalCount || 0) / itemsPerPage);
 
   const onSubmit = (data) => {
     if (editingId !== null) {

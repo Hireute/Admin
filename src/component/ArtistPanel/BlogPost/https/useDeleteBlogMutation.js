@@ -5,7 +5,7 @@ import axiosInstance from "../../../../services/axios";
 import { blogEndpoints, faqendpoints } from "../../../../services/apis";
 
 async function blogDelete(id) {
-  return axiosInstance.delete(blogEndpoints.DELETE_BLOG + `/${id}`);
+  return axiosInstance.put(blogEndpoints.DELETE_BLOG + `/${id}`);
 }
 
 export const useDeleteBlogMutation = () => {

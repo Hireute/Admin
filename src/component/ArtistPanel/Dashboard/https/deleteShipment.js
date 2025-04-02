@@ -6,7 +6,7 @@ import { shipmentendpoints } from "../../../../services/apis"
 
 
 async function ShipmentDelete({id,token}){
-    return axiosInstance.delete(shipmentendpoints.DELETE_SHIPMENT + `/${id}`,{
+    return axiosInstance.put(shipmentendpoints.DELETE_SHIPMENT + `/${id}`,{
         headers : {
             Authorization: `Bearer ${token}`
         }

@@ -41,10 +41,16 @@ export const sections = [
     path: "job-list",
   },
   {
-    key: "booking-list",
+    key: "ute-booking-list",
     icon: <BsCardChecklist size={28} />,
-    label: "Booking List",
+    label: "Ute Booking List",
     path: "booking-list",
+  },
+  {
+    key: "job-booking-list",
+    icon: <BsCardChecklist size={28} />,
+    label: "Job Booking List",
+    path: "job-booking-list",
   },
   {
     key: "all-users",

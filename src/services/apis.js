@@ -38,6 +38,16 @@ export const shipmentendpoints = {
   ALL_UTE_LIST: BASE_URL + "/api/admin/get-all-ute-list",
   ALL_JOB_LIST: BASE_URL + "/api/admin/get-all-job-list",
 
+
+  ALL_BOOKING_UTE_LIST: BASE_URL + "/api/admin/ute-list",
+  ALL_BOOKING_JOB_LIST: BASE_URL + "/api/admin/job-list",
+
+
+  ALL_PAYMENT_LIST: BASE_URL + "/api/admin/payment-history",
+
+
+
+
   SUSPEND_USER: BASE_URL + "/api/admin/user-job-suspended",
   REVOKE_USER: BASE_URL + "/api/admin/user-job-approved",
 

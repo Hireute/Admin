@@ -1,29 +1,16 @@
 import { useState } from "react";
-import { AiFillDelete } from "react-icons/ai";
+import { AiFillDelete, AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
 import { useForm } from "react-hook-form";
+import { useGetPaymentHistory } from "./https/useGetPaymentHistory";
 
-const initialFAQs = [
-  {
-    id: "1",
-    userName: "John Doe",
-    uteName: "Heavy-duty UTE for transportation",
-    uteModel: "Toyota Hilux",
-    location: "California",
-
-    utePrice: "20000",
-    paymentStatus: "Completed",
-    image:
-      "https://t3.ftcdn.net/jpg/04/08/39/96/240_F_408399601_CeSyb7MWr5FQvYX0kpv3lzftPqoB5iZ7.jpg",
-  },
-];
-
-const PaymenetHistory = () => {
-  const [faqs, setFaqs] = useState(initialFAQs);
-  const [isAddModalOpen, setAddModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+const PaymentHistory = () => {
+  const { data: paymentData, isLoading } = useGetPaymentHistory();
+  const payments = paymentData?.data || [];
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingPayment, setEditingPayment] = useState(null);
   const [newImage, setNewImage] = useState(null);
-  console.log("newImagenewImagenewImage", newImage);
 
   const {
     register,
@@ -33,200 +20,244 @@ const PaymenetHistory = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    if (editingId !== null) {
-      setFaqs((prev) =>
-        prev.map((faq) => (faq.id === editingId ? { ...faq, ...data } : faq))
-      );
-    } else {
-      const newFaq = { id: Date.now(), ...data };
-      setFaqs([...faqs, newFaq]);
-    }
+  const onSubmit = (formData) => {
+    // Here you would typically make an API call to update or create a payment
+    console.log("Form submitted:", formData);
     reset();
-    setEditingId(null);
-    setAddModalOpen(false);
+    setEditingPayment(null);
+    setIsModalOpen(false);
   };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setNewImage(URL.createObjectURL(file));
     }
   };
-  const handleEditFaq = (id) => {
-    const faq = faqs.find((faq) => faq.id === id);
-    if (faq) {
-      setValue("userName", faq.userName);
-      setValue("uteName", faq.uteName);
-      setValue("uteModel", faq.uteModel);
-      setValue("location", faq.location);
-      setValue("paymentStatus", faq.paymentStatus);
-      setValue("utePrice", faq.utePrice);
-      setValue("image", newImage || "https://via.placeholder.com/100");
-      setEditingId(id);
-      setAddModalOpen(true);
+
+  const handleEditPayment = (payment) => {
+    setEditingPayment(payment);
+    setValue("paymentBy", payment.paymentBy);
+    setValue("amount", payment.amount);
+    setValue("status", payment.status);
+    setIsModalOpen(true);
+  };
+
+  const handleDeletePayment = (id) => {
+    // Here you would typically make an API call to delete the payment
+    console.log("Delete payment with id:", id);
+  };
+
+  const getStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case 'succeeded':
+        return 'bg-green-100 text-green-800';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'failed':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const handleDeleteFaq = (id) => {
-    setFaqs(faqs.filter((faq) => faq.id !== id));
+  const formatAmount = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'aud'
+    }).format(amount / 100);
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full p-6 flex justify-center items-center">
+        <AiOutlineLoading3Quarters className="animate-spin text-4xl text-purple-700" />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full p-6 rounded-lg">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Payment History</h1>
         <button
-          className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284]  font-semibold py-2 px-4 rounded-md"
-          onClick={() => setAddModalOpen(true)}
+          className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284] font-semibold py-2 px-4 rounded-md"
+          onClick={() => {
+            setEditingPayment(null);
+            setIsModalOpen(true);
+          }}
         >
-          Add Payment Details
+          Add Payment
         </button>
       </div>
 
-      <table className="w-full border bg-white shadow-md rounded-lg">
-        <thead>
-          <tr className="bg-[#7F0284] text-white">
-            {[
-              "User Name",
-              "uteName",
-              "uteModel",
-              "location",
-              "Ute Price",
-              "paymentStatus",
-              "ute image",
-              "Actions",
-            ].map((heading, index) => (
-              <th key={index} className="px-4 py-3 whitespace-nowrap">
-                {heading}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {faqs.map((faq) => (
-            <tr key={faq.id} className="border-t text-center">
-              <td className="p-2">{faq.userName}</td>
-              <td className="p-2">{faq.uteName}</td>
-              <td className="p-2">{faq.uteModel}</td>
-              <td className="p-2">{faq.location}</td>
-              <td className="p-2">{faq.utePrice}</td>
-              <td className="p-2">{faq.paymentStatus}</td>
-              <td className="p-2">
-                <img
-                  src={faq.image}
-                  alt="Blog"
-                  className="w-16 h-16 object-cover rounded"
-                />
-              </td>
-              <td className="p-2 flex justify-center">
-                <FaEdit
-                  onClick={() => handleEditFaq(faq.id)}
-                  className="text-[#7F0284] text-2xl mr-2 cursor-pointer"
-                />
-                <AiFillDelete
-                  onClick={() => handleDeleteFaq(faq.id)}
-                  className="text-red-600 text-2xl cursor-pointer"
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {payments.length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-lg shadow">
+          <p className="text-gray-500">No payment records found</p>
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-[#7F0284] text-white">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                    User
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                    Amount
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                    Receipt
+                  </th>
+                  {/* <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                    Actions
+                  </th> */}
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {payments.map((payment) => (
+                  <tr key={payment._id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {payment.paymentBy}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {formatAmount(payment.amount)}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(payment.status)}`}>
+                        {payment.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        <button className="text-purple-600 hover:text-purple-900 underline">
+                          View Receipt
+                        </button>
+                      </div>
+                    </td>
+                    {/* <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex justify-end ">
+                        <button
+                          onClick={() => handleEditPayment(payment)}
+                          className="text-[#7F0284] hover:text-[#FEE0FF]"
+                        >
+                          <FaEdit className="h-5 w-5" />
+                        </button>
+                        <button
+                          onClick={() => handleDeletePayment(payment._id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          <AiFillDelete className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </td> */}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
-      {isAddModalOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center p-4">
-          <div
-            className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
-            style={{ overflow: "auto", height: "500px" }}
-          >
+      {/* Add/Edit Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center p-4 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-xl font-semibold mb-4">
-              {editingId !== null ? "Edit Payment Detail" : "Add a New User"}
+              {editingPayment ? 'Edit Payment' : 'Add New Payment'}
             </h2>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <input
-                type="text"
-                className="w-full p-2 border rounded mb-3"
-                {...register("userName", { required: "Username is required" })}
-                placeholder="Enter username"
-              />
-              {errors.fullName && (
-                <div className="text-red-500">{errors.fullName.message}</div>
-              )}
-              <input
-                type="text"
-                className="w-full p-2 border rounded mb-3"
-                {...register("uteName", {
-                  required: "Ute name is required",
-                })}
-                placeholder="Enter ute name"
-              />
-              {errors.uteName && (
-                <div className="text-red-500">{errors.uteName.message}</div>
-              )}
-              <input
-                type="text"
-                className="w-full p-2 border rounded mb-3"
-                {...register("uteModel", {
-                  required: "Ute model is required",
-                })}
-                placeholder="Enter ute model  "
-              />
-              {errors.uteModel && (
-                <div className="text-red-500">{errors.uteModel.message}</div>
-              )}
-
-              <input
-                type="text"
-                className="w-full p-2 border rounded mb-3"
-                {...register("location", {
-                  required: "Location is required",
-                })}
-                placeholder="Enter Location  "
-              />
-              {errors.location && (
-                <div className="text-red-500">{errors.location.message}</div>
-              )}
-              <label className="flex items-center cursor-pointer">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  User Name
+                </label>
                 <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  {...register("paymentStatus")}
+                  type="text"
+                  className="w-full p-2 border rounded"
+                  {...register("paymentBy", { required: "User name is required" })}
+                  placeholder="Enter user name"
                 />
-                <div className="w-12 h-6 bg-gray-300 rounded-full relative transition duration-300 peer-checked:bg-green-500 mb-5">
-                  <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform transform peer-checked:translate-x-6"></div>
-                </div>
-                <span className="ml-2 text-gray-700 mt-0">Payment Status</span>
-              </label>
+                {errors.paymentBy && (
+                  <p className="mt-1 text-sm text-red-600">{errors.paymentBy.message}</p>
+                )}
+              </div>
 
-              <input
-                type="text"
-                className="w-full p-2 border rounded mb-3"
-                {...register("utePrice", {
-                  required: "required",
-                })}
-                placeholder="Enter ute price  "
-              />
-              {errors.utePrice && (
-                <div className="text-red-500">{errors.utePrice.message}</div>
-              )}
-              <input
-                type="file"
-                className="w-full p-2 border rounded mb-3"
-                onChange={handleImageChange}
-              />
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Amount (in cents)
+                </label>
+                <input
+                  type="number"
+                  className="w-full p-2 border rounded"
+                  {...register("amount", { 
+                    required: "Amount is required",
+                    min: {
+                      value: 1,
+                      message: "Amount must be at least 1 cent"
+                    }
+                  })}
+                  placeholder="Enter amount in cents"
+                />
+                {errors.amount && (
+                  <p className="mt-1 text-sm text-red-600">{errors.amount.message}</p>
+                )}
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Status
+                </label>
+                <select
+                  className="w-full p-2 border rounded"
+                  {...register("status", { required: "Status is required" })}
+                >
+                  <option value="">Select status</option>
+                  <option value="succeeded">Succeeded</option>
+                  <option value="pending">Pending</option>
+                  <option value="failed">Failed</option>
+                </select>
+                {errors.status && (
+                  <p className="mt-1 text-sm text-red-600">{errors.status.message}</p>
+                )}
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Receipt Image
+                </label>
+                <input
+                  type="file"
+                  className="w-full p-2 border rounded"
+                  onChange={handleImageChange}
+                  accept="image/*"
+                />
+              </div>
+
               <div className="flex justify-end space-x-3">
                 <button
-                  type="submit"
-                  className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284]  text-white py-2 px-4 rounded"
-                >
-                  Save
-                </button>
-                <button
                   type="button"
-                  onClick={() => setAddModalOpen(false)}
-                  className="bg-gray-500 text-white py-2 px-4 rounded"
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setEditingPayment(null);
+                    reset();
+                  }}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
                   Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-[#7F0284] hover:bg-[#FEE0FF] hover:text-[#7F0284]"
+                >
+                  Save
                 </button>
               </div>
             </form>
@@ -237,4 +268,4 @@ const PaymenetHistory = () => {
   );
 };
 
-export default PaymenetHistory;
+export default PaymentHistory;

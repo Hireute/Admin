@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AiFillDelete } from "react-icons/ai";
-import { FaEdit, FaEye } from "react-icons/fa";
+import { AiFillDelete, AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import { FaEdit, FaEye, FaFilter, FaSearch } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useGetAllJobUserList } from "./https/useGetAllJobUserList";
 import useRevokeMutation from "./https/useRevokeMutation";
@@ -8,44 +8,34 @@ import useSuspendMutation from "./https/useSuspendMutation";
 import Loader from "../../utils/Loader";
 import { BASE_IMAGE_URL } from "../../utils/exports";
 import useDeleteJob from "./https/useDeleteJob";
+import { FaClipboardList } from "react-icons/fa";
 
 const JobList = () => {
-  const [faqs, setFaqs] = useState([]);
-  const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [editingId, setEditingId] = useState(null);
-  const [newImage, setNewImage] = useState(null);
   const [pendingActions, setPendingActions] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [budgetFilter, setBudgetFilter] = useState("none");
+  const [showFilters, setShowFilters] = useState(false);
 
   const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm();
+    data,
+    isLoading,
+    isFetching
+  } = useGetAllJobUserList({ page: currentPage, limit: 10 });
 
-  // Pass currentPage as part of the query key to ensure refetching
-  const { data, isLoading, isFetching } = useGetAllJobUserList({ page: currentPage , limit: 10 });
-
-  const { mutate: approveMutate, isPending: approvePending } = useRevokeMutation();
+  const { mutate: approveMutate } = useRevokeMutation();
+  const { mutate: deleteJob } = useDeleteJob();
 
   const paginatedData = data?.data || [];
   const totalCount = data?.totalCount || 0;
   const paginationInfo = data?.paginationData || {};
-  const totalPages = paginationInfo?.totalPages || Math.ceil(totalCount / (paginationInfo?.limit || 10));
-
-
-
-  console.log(data)
+  const totalPages = paginationInfo?.totalPages || Math.ceil(totalCount / 10);
 
   const filteredData = paginatedData
-    ?.filter((faq) =>
-      faq?.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    ?.filter((job) =>
+      job?.title?.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
       if (budgetFilter === "lowToHigh") {
@@ -58,8 +48,6 @@ const JobList = () => {
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
-
-      console.log("chnaged")
       setCurrentPage(page);
     }
   };
@@ -72,278 +60,459 @@ const JobList = () => {
   const handleBudgetFilter = (filter) => {
     setBudgetFilter(filter);
     setCurrentPage(1);
+    setShowFilters(false);
   };
 
-  const onSubmit = (data) => {
-    if (editingId !== null) {
-      setFaqs((prev) =>
-        prev.map((faq) => (faq.id === editingId ? { ...faq, ...data } : faq))
-      );
-    } else {
-      const newFaq = { id: Date.now(), ...data, status: "Pending" };
-      setFaqs([...faqs, newFaq]);
-    }
-    reset();
-    setEditingId(null);
-    setAddModalOpen(false);
-  };
-
-  const handleViewJob = (faq) => {
-    setSelectedJob(faq);
+  const handleViewJob = (job) => {
+    setSelectedJob(job);
     setViewModalOpen(true);
   };
 
-  const handleApproveFaq = (id) => {
+  const handleApproveJob = (id) => {
     setPendingActions((prev) => ({ ...prev, [`approve-${id}`]: true }));
     const newData = { id, status: "Approved" };
     approveMutate(newData, {
-      onSuccess: () => {
-        setFaqs((prev) =>
-          prev.map((faq) =>
-            faq.id === id ? { ...faq, status: "Approved" } : faq
-          )
-        );
-      },
       onSettled: () => {
         setPendingActions((prev) => ({ ...prev, [`approve-${id}`]: false }));
       },
     });
   };
 
-  const handleRejectFaq = (id) => {
+  const handleRejectJob = (id) => {
     setPendingActions((prev) => ({ ...prev, [`reject-${id}`]: true }));
-    const newData = { id, status: "reject" };
+    const newData = { id, status: "Rejected" };
     approveMutate(newData, {
-      onSuccess: () => {
-        setFaqs((prev) =>
-          prev.map((faq) =>
-            faq.id === id ? { ...faq, status: "Rejected" } : faq
-          )
-        );
-      },
       onSettled: () => {
         setPendingActions((prev) => ({ ...prev, [`reject-${id}`]: false }));
       },
     });
   };
 
-  const { mutate } = useDeleteJob();
-  const handleDeleteFaq = (id) => {
-    mutate(id);
+  const handleDeleteJob = (id) => {
+    if (window.confirm("Are you sure you want to delete this job?")) {
+      deleteJob(id);
+    }
   };
 
   const formatDate = (dateString) => {
-    return dateString ? new Date(dateString).toLocaleDateString() : "N/A";
+    if (!dateString) return "N/A";
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   if (isLoading) {
-    return <Loader />;
+    return <div className="flex justify-center items-center h-64"><Loader /></div>;
   }
 
   return (
-    <div className="w-full p-6 rounded-lg">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Jobs List</h1>
-        <div className="mb-4 flex gap-4">
-          <input
-            type="text"
-            placeholder="Search by job title..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="px-4 py-2 w-[30vw] border rounded-md"
-          />
-          <select
-            value={budgetFilter}
-            onChange={(e) => handleBudgetFilter(e.target.value)}
-            className="px-4 py-2 border rounded-md"
-          >
-            <option value="none">No Filter</option>
-            <option value="lowToHigh">Budget: Low to High</option>
-            <option value="highToLow">Budget: High to Low</option>
-          </select>
+    <div className="container mx-auto p-4 md:p-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <h1 className="text-2xl font-bold text-gray-800">Job Listings</h1>
+        
+        <div className="w-full md:w-auto flex flex-col md:flex-row gap-3">
+          <div className="relative flex-grow">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FaSearch className="text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search jobs..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+            />
+          </div>
+          
+          <div className="relative">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              <FaFilter className="text-gray-600" />
+              <span>Filter</span>
+            </button>
+            
+            {showFilters && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                <div className="py-1">
+                  <button
+                    onClick={() => handleBudgetFilter("none")}
+                    className={`block w-full text-left px-4 py-2 text-sm ${budgetFilter === "none" ? "bg-purple-100 text-purple-800" : "text-gray-700 hover:bg-gray-100"}`}
+                  >
+                    No Filter
+                  </button>
+                  <button
+                    onClick={() => handleBudgetFilter("lowToHigh")}
+                    className={`block w-full text-left px-4 py-2 text-sm ${budgetFilter === "lowToHigh" ? "bg-purple-100 text-purple-800" : "text-gray-700 hover:bg-gray-100"}`}
+                  >
+                    Budget: Low to High
+                  </button>
+                  <button
+                    onClick={() => handleBudgetFilter("highToLow")}
+                    className={`block w-full text-left px-4 py-2 text-sm ${budgetFilter === "highToLow" ? "bg-purple-100 text-purple-800" : "text-gray-700 hover:bg-gray-100"}`}
+                  >
+                    Budget: High to Low
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {isFetching && <div className="text-center py-2"><Loader/></div>}
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full border bg-white shadow-md rounded-lg">
-          <thead>
-            <tr className="bg-[#7F0284] text-white">
-              {[
-                "Job Title",
-                "Description",
-                "State",
-                "Service City",
-                "Shift",
-                "Budget",
-                "Ute Image",
-                "Created Date",
-                "View",
-                "Status",
-                "Actions",
-              ].map((heading, index) => (
-                <th key={index} className="px-4 py-3 whitespace-nowrap">
-                  {heading}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData?.length > 0 ? (
-              filteredData.map((faq) => (
-                <tr key={faq.id} className="border-t text-center">
-                  <td className="p-2">{faq?.title}</td>
-                  <td>
-                    {faq?.description?.split(" ").slice(0, 3).join(" ") +
-                      (faq?.description?.split(" ").length > 3 ? "..." : "")}
-                  </td>
-                  <td className="p-2">{faq?.state}</td>
-                  <td className="p-2">{faq?.location}</td>
-                  <td className="p-2">{faq?.workSchedule?.join(", ")}</td>
-                  <td className="p-2">{faq?.budget}</td>
-                  <td className="p-2">
-                    {faq?.jobImg?.[0] ? (
-                      <img
-                        src={`${BASE_IMAGE_URL}/jobImg/${faq.jobImg[0]}`}
-                        alt="Job"
-                        className="w-16 h-16 object-cover rounded"
-                      />
-                    ) : (
-                      "No Image"
-                    )}
-                  </td>
-                  <td className="p-2">{formatDate(faq?.createdAt)}</td>
-                  <td className="p-2">
-                    <FaEye
-                      className="text-blue-500 cursor-pointer"
-                      onClick={() => handleViewJob(faq)}
-                    />
-                  </td>
-                  <td className="p-2">
-                    <span
-                      className={`px-2 py-1 rounded ${
-                        faq?.status === "Approved"
-                          ? "bg-green-100 text-green-800"
-                          : faq?.status === "Rejected"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {faq?.status || "Pending"}
-                    </span>
-                  </td>
-                  <td className="p-2 flex justify-center gap-3 items-center">
-                    <span
-                      onClick={() => handleApproveFaq(faq?._id)}
-                      className="px-2 border border-zinc-400 rounded-md py-2 font-semibold bg-green-500 text-white cursor-pointer"
-                    >
-                      {pendingActions[`approve-${faq?._id}`]
-                        ? "Approving..."
-                        : "Approve"}
-                    </span>
-                    <span
-                      onClick={() => handleRejectFaq(faq?._id)}
-                      className="px-2 border border-zinc-400 rounded-md py-2 font-semibold bg-red-500 text-white cursor-pointer"
-                    >
-                      {pendingActions[`reject-${faq?._id}`]
-                        ? "Rejecting..."
-                        : "Reject"}
-                    </span>
-                    <AiFillDelete
-                      className="text-red-500 cursor-pointer text-xl"
-                      onClick={() => handleDeleteFaq(faq?._id)}
-                    />
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="11" className="p-4 text-center">
-                  No Jobs Listed
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {totalPages > 1 && (
-        <div className="flex justify-center gap-2 mt-4">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={!paginationInfo?.hasPrevious || isFetching}
-            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <span className="px-4 py-2">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={!paginationInfo?.hasNext || isFetching}
-            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-          >
-            Next
-          </button>
+      {isFetching && (
+        <div className="flex justify-center py-2">
+          <Loader size="small" />
         </div>
       )}
 
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-purple-700 text-white">
+              <tr>
+                {[
+                  "Job Title",
+                  "Description",
+                  "State",
+                  "Location",
+                  "Shift",
+                  "Budget",
+                  "Image",
+                  "Created",
+                  "Status",
+                  "Created At",
+                  "Actions"
+                ].map((heading, index) => (
+                  <th
+                    key={index}
+                    className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-wider ${
+                      index === 0 ? "rounded-tl-lg" : ""
+                    } ${
+                      index === 10 ? "rounded-tr-lg" : ""
+                    }`}
+                  >
+                    {heading}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredData?.length > 0 ? (
+                filteredData.map((job) => (
+                  <tr key={job._id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 max-w-xs truncate">
+                      {job?.title || "N/A"}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate">
+                      {job?.description || "No description"}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      {job?.state || "N/A"}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      {job?.location || "N/A"}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      {job?.workSchedule?.join(", ") || "N/A"}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      {job?.budget ? `$${job.budget}` : "N/A"}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="flex-shrink-0 h-10 w-10">
+                        {job?.jobImg?.[0] ? (
+                          <img
+                            className="h-10 w-10 rounded-full object-cover"
+                            src={`${BASE_IMAGE_URL}/jobImg/${job.jobImg[0]}`}
+                            alt="Job"
+                            // onError={(e) => {
+                            //   e.target.src = "/placeholder-job.png";
+                            // }}
+                          />
+                        ) : (
+                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                           <FaClipboardList />
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      {formatDate(job?.createdAt)}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span
+                        className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                          job?.status === "Approved"
+                            ? "bg-green-100 text-green-800"
+                            : job?.status === "Rejected"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {job?.status || "Pending"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 max-w-xs truncate">
+                      {job?.createdAt || "N/A"}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => handleViewJob(job)}
+                          className="text-purple-600 hover:text-purple-900 p-1 rounded-full hover:bg-purple-50 transition-colors"
+                          title="View"
+                        >
+                          <FaEye className="w-4 h-4" />
+                        </button>
+                        
+                        {/* {job?.status !== "Approved" && ( */}
+                          <button
+                            onClick={() => handleApproveJob(job._id)}
+                            className="text-white  p-1 rounded-md bg-green-500 transition-colors"
+                            title="Approve"
+                            disabled={job?.status === "Approved"}
+                          >
+                            {pendingActions[`approve-${job._id}`] ? (
+                              <span className="w-4 h-4 border-2 border-green-600 border-t-transparent rounded-full animate-spin inline-block"></span>
+                            ) : (
+                              "Approve"
+                            )}
+                          </button>
+                        {/* )} */}
+                        
+                        {/* {job?.status !== "Rejected" && ( */}
+                          <button
+                            onClick={() => handleRejectJob(job._id)}
+                            className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50 transition-colors"
+                            title="Reject"
+                            disabled={pendingActions[`reject-${job._id}`]}
+                          >
+                            {pendingActions[`reject-${job._id}`] ? (
+                              <span className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin inline-block"></span>
+                            ) : (
+                              "Reject"
+                            )}
+                          </button>
+                        {/* )} */}
+                        
+                        <button
+                          onClick={() => handleDeleteJob(job._id)}
+                          className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50 transition-colors"
+                          title="Delete"
+                        >
+                          <AiFillDelete className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="10" className="px-4 py-6 text-center">
+                    <div className="flex flex-col items-center justify-center text-gray-500">
+                      <svg
+                        className="w-16 h-16 mb-4 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                      </svg>
+                      <p className="text-lg font-medium text-gray-700">No Jobs Found</p>
+                      <p className="text-sm max-w-md mt-2">
+                        {searchTerm
+                          ? "No jobs match your search criteria. Try a different search."
+                          : "There are currently no job listings available."}
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {totalPages > 1 && (
+          <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 rounded-b-lg">
+            <div className="flex-1 flex justify-between sm:hidden">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={!paginationInfo?.hasPrevious || isFetching}
+                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={!paginationInfo?.hasNext || isFetching}
+                className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm text-gray-700">
+                  Showing <span className="font-medium">{(currentPage - 1) * 10 + 1}</span> to{" "}
+                  <span className="font-medium">
+                    {Math.min(currentPage * 10, totalCount)}
+                  </span>{" "}
+                  of <span className="font-medium">{totalCount}</span> results
+                </p>
+              </div>
+              <div>
+                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={!paginationInfo?.hasPrevious || isFetching}
+                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                  >
+                    <span className="sr-only">Previous</span>
+                    <AiOutlineLeft className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageChange(pageNum)}
+                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                          currentPage === pageNum
+                            ? "z-10 bg-purple-600 border-purple-600 text-white"
+                            : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                        }`}
+                        disabled={isFetching}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={!paginationInfo?.hasNext || isFetching}
+                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                  >
+                    <span className="sr-only">Next</span>
+                    <AiOutlineRight className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                </nav>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       {isViewModalOpen && selectedJob && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-            <h2 className="text-xl font-bold mb-4">Job Details</h2>
-            <div className="space-y-2">
-              <p>
-                <strong>Job Title:</strong> {selectedJob.title}
-              </p>
-              <p>
-                <strong>Description:</strong> {selectedJob.description}
-              </p>
-              <p>
-                <strong>State:</strong> {selectedJob.state}
-              </p>
-              <p>
-                <strong>Service City:</strong> {selectedJob.location}
-              </p>
-              <p>
-                <strong>Shift:</strong> {selectedJob.workSchedule?.join(", ")}
-              </p>
-              <p>
-                <strong>Budget:</strong> {selectedJob.budget}
-              </p>
-              <p>
-                <strong>Created Date:</strong> {formatDate(selectedJob.createdAt)}
-              </p>
-              <p>
-                <strong>Status:</strong> {selectedJob.status || "Pending"}
-              </p>
-              {selectedJob.jobImg?.length > 0 ? (
-                <div>
-                  <strong>Job Image(s):</strong>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {selectedJob.jobImg.map((item, index) => (
-                      <img
-                        key={index}
-                        src={`${BASE_IMAGE_URL}/jobImg/${item}`}
-                        alt={`Job Image ${index + 1}`}
-                        className="w-32 h-32 object-cover rounded"
-                        onError={(e) => (e.target.src = "/fallback-image.jpg")}
-                      />
-                    ))}
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div className="px-6 py-4 border-b border-gray-200 bg-purple-700 text-white">
+              <h2 className="text-xl font-semibold">Job Details</h2>
+            </div>
+            <div className="overflow-y-auto p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Job Title</h3>
+                    <p className="mt-1 text-sm text-gray-900">{selectedJob?.title || "N/A"}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Description</h3>
+                    <p className="mt-1 text-sm text-gray-900">{selectedJob?.description || "N/A"}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">State</h3>
+                    <p className="mt-1 text-sm text-gray-900">{selectedJob?.state || "N/A"}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Location</h3>
+                    <p className="mt-1 text-sm text-gray-900">{selectedJob?.location || "N/A"}</p>
                   </div>
                 </div>
-              ) : (
-                <div>No job images available.</div>
-              )}
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Work Schedule</h3>
+                    <p className="mt-1 text-sm text-gray-900">
+                      {selectedJob?.workSchedule?.join(", ") || "N/A"}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Budget</h3>
+                    <p className="mt-1 text-sm text-gray-900">
+                      {selectedJob?.budget ? `$${selectedJob.budget}` : "N/A"}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Created Date</h3>
+                    <p className="mt-1 text-sm text-gray-900">
+                      {formatDate(selectedJob?.createdAt)}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Status</h3>
+                    <p className="mt-1 text-sm">
+                      <span
+                        className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                          selectedJob?.status === "Approved"
+                            ? "bg-green-100 text-green-800"
+                            : selectedJob?.status === "Rejected"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {selectedJob?.status || "Pending"}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <h3 className="text-sm font-medium text-gray-500 mb-2">Job Images</h3>
+                <div className="flex flex-wrap gap-4">
+                  {selectedJob?.jobImg?.length > 0 ? (
+                    selectedJob.jobImg.map((image, index) => (
+                      <div key={index} className="w-32 h-32 rounded-md overflow-hidden border border-gray-200">
+                        <img
+                          src={`${BASE_IMAGE_URL}/jobImg/${image}`}
+                          alt={`Job Image ${index + 1}`}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.src = "/placeholder-job.png";
+                          }}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500">No images available</p>
+                  )}
+                </div>
+              </div>
             </div>
-            <button
-              onClick={() => setViewModalOpen(false)}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Close
-            </button>
+            <div className="px-6 py-4 border-t border-gray-200 flex justify-end">
+              <button
+                onClick={() => setViewModalOpen(false)}
+                className="px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

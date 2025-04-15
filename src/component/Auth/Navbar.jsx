@@ -27,7 +27,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3 pr-9">
-          <span className="text-gray-700 font-medium">{userName + " " + lastName}</span> {/* Replace with actual owner name */}
+          <span className="text-gray-700 font-medium">{userName + " " + lastName}</span> 
           <FaUserCircle className="text-3xl text-purple-800 cursor-pointer" />
         </div>
       </div>

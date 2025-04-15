@@ -115,7 +115,7 @@ const Dashboard = () => {
       </div>
 
       {/* Additional sections with brand colors */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
           <div className="flex items-center mb-4">
             <div className="w-1 h-8 bg-[#7F0284] rounded-full mr-3"></div>
@@ -144,7 +144,7 @@ const Dashboard = () => {
         </div>
 
       
-      </div>
+      </div> */}
     </div>
   );
 };

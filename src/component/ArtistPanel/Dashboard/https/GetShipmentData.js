@@ -1,25 +1,19 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+
+import { shipmentendpoints } from '../../../../services/apis';
 import axiosInstance from '../../../../services/axios';
-import {  requestendpoints, shipmentendpoints } from '../../../../services/apis';
 
 
-async function fatchAllShipmentList({token,limit = 8, page = 1 }) {
- const params = {
-    page,
-    limit
- }
-  const { data } = await axiosInstance.get(shipmentendpoints.ALL_SHIPMENT_DASHBOARD_LIST, {
-    params,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+
+async function fatchAllShipmentList() {
+
+  const { data } = await axiosInstance.get(shipmentendpoints.ALL_SHIPMENT_DASHBOARD_LIST);
   return data;
 }
 
-export function GetAllShipmentData({token,limit = 8, page = 1}) {
+export function GetAllShipmentData() {
   return useQuery({
-    queryKey: ["kuch bhi nahi"],
-    queryFn: () => fatchAllShipmentList({token,page,limit}),
+    queryKey: ["fatchAllShipmentList"],
+    queryFn:  fatchAllShipmentList,
   });
 }

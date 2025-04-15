@@ -109,13 +109,7 @@ const ShipmentTable = () => {
     <div className="container mx-auto p-4 md:p-6">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 sm:mb-0">UTE Management</h1>
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-600">
-            Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-            {Math.min(currentPage * itemsPerPage, data?.totalCount || 0)} of{" "}
-            {data?.totalCount || 0} entries
-          </span>
-        </div>
+       
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -171,14 +165,14 @@ const ShipmentTable = () => {
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                       {faq?.licenceExpireDate
-                        ? new Date(faq.licenceExpireDate).toLocaleDateString()
+                        ? faq.licenceExpireDate?.licenceExpireMonth + "/" + faq.licenceExpireDate?.licenceExpireYear 
                         : "N/A"}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                       {faq?.serviceCity || "N/A"}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
-                      {faq?.location || "N/A"}
+                      {faq?.state || "N/A"}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                       {faq?.uteModel || "N/A"}
@@ -392,6 +386,14 @@ const ShipmentTable = () => {
           </div>
         )}
       </div>
+
+      <div className="flex justify-end items-center space-x-2 mt-5">
+          <span className="text-sm text-gray-600">
+            Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+            {Math.min(currentPage * itemsPerPage, data?.totalCount || 0)} of{" "}
+            {data?.totalCount || 0} entries
+          </span>
+        </div>
 
       {isViewModalOpen && viewingFaq && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">

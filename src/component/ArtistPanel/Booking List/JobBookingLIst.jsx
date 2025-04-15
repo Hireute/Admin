@@ -5,8 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useGetJobList } from './https/useGetJobList';
 
 const JobBookingList = () => {
-//   Mock data - replace this with your actual API call
-//   const [isLoading, setIsLoading] = useState(false);
+
 
   const {data , isLoading} = useGetJobList()
 
@@ -66,10 +65,10 @@ const JobBookingList = () => {
 
   const onSubmit = (data) => {
     setIsLoading(true);
-    // Simulate API call
+   
     setTimeout(() => {
       if (editingBooking) {
-        // Update existing booking
+        
         setBookings(prev => ({
           ...prev,
           data: prev.data.map(booking => 
@@ -77,7 +76,7 @@ const JobBookingList = () => {
           )
         }));
       } else {
-        // Add new booking
+        
         const newBooking = {
           ...data,
           _id: Date.now().toString(),
@@ -126,7 +125,7 @@ const JobBookingList = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Job Bookings</h1>
-        <button
+        {/* <button
           onClick={() => {
             setEditingBooking(null);
             setIsModalOpen(true);
@@ -134,7 +133,7 @@ const JobBookingList = () => {
           className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md transition-colors"
         >
           Add Booking
-        </button>
+        </button> */}
       </div>
 
       {isLoading && !bookings?.data?.length ? (

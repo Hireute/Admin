@@ -64,7 +64,7 @@ const BookinList = () => {
   return (
     <div className="w-full p-6 rounded-lg">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Job Bookings</h1>
+        <h1 className="text-2xl font-bold">Ute Bookings</h1>
         {/* <button
           className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284] font-semibold py-2 px-4 rounded-md"
           onClick={() => setAddModalOpen(true)}
@@ -74,7 +74,9 @@ const BookinList = () => {
       </div>
 
       {bookings.length === 0 ? (
-        <div className="text-center py-8">No bookings found</div>
+         <div className="text-center py-12 bg-white rounded-lg shadow">
+         <p className="text-gray-500">No bookings found</p>
+       </div>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto">

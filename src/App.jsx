@@ -13,6 +13,8 @@ import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 import { setup } from "./services/axios";
+import { AuthProvider } from "./component/utils/AuthProvider";
+import AuthGuard from "./component/utils/AuthGuard";
 
 function App() {
   setup();
@@ -20,6 +22,9 @@ function App() {
   const isLoggedIn = false;
 
   return (
+
+
+    <AuthProvider>
     <Router>
       <Navbar />
       <Routes>
@@ -34,7 +39,8 @@ function App() {
         <Route
           path="/*"
           element={
-            <ProtectedRoute isLoggedIn={isLoggedIn} component={ArtistPanel} />
+            <AuthGuard>
+            <ProtectedRoute isLoggedIn={isLoggedIn} component={ArtistPanel} /></AuthGuard>
           }
         />
 
@@ -46,6 +52,7 @@ function App() {
         /> */}
       </Routes>
     </Router>
+    </AuthProvider>
   );
 }
 

@@ -205,7 +205,7 @@ const SideBar = () => {
               <button
                 onClick={handleModalToggle}
                 className="flex items-center mt-2 space-x-4 px-3 py-3 w-full rounded-md text-black transition-all duration-300 
-        hover:bg-[#7F0284] hover:text-white"
+                 hover:bg-[#7F0284] hover:text-white"
               >
                 <HiMiniArrowLeftStartOnRectangle size={28} />
                 {(isOpen || window.innerWidth >= 1024) && <p>Log Out</p>}

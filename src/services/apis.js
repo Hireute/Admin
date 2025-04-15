@@ -34,9 +34,10 @@ export const quoteendpoints = {
   QUOTE_LIST: BASE_URL + "/api/admin/quote-email-data",
 };
 export const shipmentendpoints = {
-  ALL_SHIPMENT_DASHBOARD_LIST: BASE_URL + "/api/admin/all-quote-list",
+  ALL_SHIPMENT_DASHBOARD_LIST: BASE_URL + "/api/admin/dashboard-data",
   ALL_UTE_LIST: BASE_URL + "/api/admin/get-all-ute-list",
   ALL_JOB_LIST: BASE_URL + "/api/admin/get-all-job-list",
+  CHECK_TOKEN: BASE_URL + "/api/admin/check-token",
 
 
   ALL_BOOKING_UTE_LIST: BASE_URL + "/api/admin/ute-list",

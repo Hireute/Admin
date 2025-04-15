@@ -129,77 +129,77 @@ const BlogPost = () => {
   }
 
   return (
-    <div className="w-full p-6 rounded-lg">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Blogs List</h1>
+    <div className="w-full p-4 md:p-6 rounded-lg overflow-x-auto">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <h1 className="text-xl md:text-2xl font-bold">Blogs List</h1>
         <button
-          className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284] font-semibold py-2 px-4 rounded-md"
+          className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284] font-semibold py-2 px-4 rounded-md w-full md:w-auto"
           onClick={() => setModalOpen(true)}
         >
           Add Blog
         </button>
       </div>
 
-      <table className="w-full border-collapse border bg-white shadow-md border-gray-300 rounded-lg">
-        <thead>
-          <tr className="bg-[#7F0284] text-white">
-            <th className="p-2">Title</th>
-            <th className="p-2">Description</th>
-            <th className="p-2">Posted At</th>
-            <th className="p-2">Number of views</th>
-            {/* <th className="p-2">Number of comments</th> */}
-            <th className="p-2">Blog image</th>
-            <th className="p-2">Blog user</th>
-            <th className="p-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.map((blog) => (
-            <tr key={blog.id} className="border-t border-gray-300 text-center">
-              <td className="p-2">{blog?.title}</td>
-              <td className="p-2">
-                {blog?.description
-                  ? blog.description.split(" ").slice(0, 25).join(" ") +
-                    (blog.description.split(" ").length > 25 ? "..." : "")
-                  : "No description"}
-              </td>
-              <td className="p-2">
-                {blog?.createdAt
-                  ? new Date(blog.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })
-                  : "No date"}
-              </td>
-              <td className="p-2">{blog?.views}</td>
-              {/* <td className="p-2">{blog?.comments}</td> */}
-              <td className="p-2">
-                <img
-                  src={`${BASE_IMAGE_URL}/blogImg/${blog.blogImg[0]}`}
-                  alt="Blog"
-                  className="w-16 h-16 object-cover rounded"
-                />
-              </td>
-              <td className="p-2">{blog?.user}</td>
-              <td className="p-2 flex justify-center space-x-2">
-                <FaEdit
-                  onClick={() => handleEditBlog(blog?._id)}
-                  className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl"
-                />
-                <AiFillDelete
-                  onClick={() => handleDeleteBlog(blog?._id)}
-                  className="text-red-600 hover:text-red-800 cursor-pointer text-xl"
-                />
-              </td>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse border bg-white shadow-md border-gray-300 rounded-lg">
+          <thead>
+            <tr className="bg-[#7F0284] text-white">
+              <th className="p-2 text-left">Title</th>
+              <th className="p-2 text-left hidden sm:table-cell">Description</th>
+              <th className="p-2 text-left hidden md:table-cell">Posted At</th>
+              <th className="p-2 text-left hidden lg:table-cell">Views</th>
+              <th className="p-2 text-left">Image</th>
+              <th className="p-2 text-left hidden xl:table-cell">User</th>
+              <th className="p-2 text-left">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data?.map((blog) => (
+              <tr key={blog.id} className="border-t border-gray-300">
+                <td className="p-2">{blog?.title}</td>
+                <td className="p-2 hidden sm:table-cell">
+                  {blog?.description
+                    ? blog.description.split(" ").slice(0, 25).join(" ") +
+                      (blog.description.split(" ").length > 25 ? "..." : "")
+                    : "No description"}
+                </td>
+                <td className="p-2 hidden md:table-cell">
+                  {blog?.createdAt
+                    ? new Date(blog.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : "No date"}
+                </td>
+                <td className="p-2 hidden lg:table-cell">{blog?.views}</td>
+                <td className="p-2">
+                  <img
+                    src={`${BASE_IMAGE_URL}/blogImg/${blog.blogImg[0]}`}
+                    alt="Blog"
+                    className="w-10 h-10 md:w-16 md:h-16 object-cover rounded"
+                  />
+                </td>
+                <td className="p-2 hidden xl:table-cell">{blog?.user}</td>
+                <td className="p-2 flex justify-start space-x-2">
+                  <FaEdit
+                    onClick={() => handleEditBlog(blog?._id)}
+                    className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl"
+                  />
+                  <AiFillDelete
+                    onClick={() => handleDeleteBlog(blog?._id)}
+                    className="text-red-600 hover:text-red-800 cursor-pointer text-xl"
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center p-4">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+      {(isModalOpen || isModalEditOpen) && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center p-4 z-50">
+          <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-semibold mb-4">
               {editingId !== null ? "Edit Blog" : "Add a New Blog"}
             </h2>
@@ -228,15 +228,24 @@ const BlogPost = () => {
               onChange={(e) => setNewUser(e.target.value)}
               placeholder="Enter User Name"
             />
-            <div className="flex justify-end space-x-3">
+            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
               <button
-                onClick={handleSaveBlog}
+                onClick={isModalEditOpen ? handleUpdateBlog : handleSaveBlog}
                 className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284] py-2 px-4 rounded"
               >
-                {isPending ? "Saving..." : "Save"}
+                {isPending
+                  ? "Saving..."
+                  : updatePending
+                  ? "Updating..."
+                  : isModalEditOpen
+                  ? "Update"
+                  : "Save"}
               </button>
               <button
-                onClick={() => setModalOpen(false)}
+                onClick={() => {
+                  setModalOpen(false);
+                  setModalEditOpen(false);
+                }}
                 className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded"
               >
                 Cancel
@@ -245,55 +254,6 @@ const BlogPost = () => {
           </div>
         </div>
       )}
-
-      {isModalEditOpen ? (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center p-4">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4">
-              {editingId !== null ? "Edit Blog" : "Add a New Blog"}
-            </h2>
-            <input
-              type="text"
-              className="w-full p-2 border rounded mb-3"
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="Enter Title"
-            />
-            <textarea
-              className="w-full p-2 border rounded mb-3"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-              placeholder="Enter Description"
-            ></textarea>
-            <input
-              type="file"
-              className="w-full p-2 border rounded mb-3"
-              onChange={handleImageChange}
-            />
-            <input
-              type="text"
-              className="w-full p-2 border rounded mb-3"
-              value={newUser}
-              onChange={(e) => setNewUser(e.target.value)}
-              placeholder="Enter User Name"
-            />
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={handleUpdateBlog}
-                className="bg-[#7F0284] hover:bg-[#FEE0FF] text-white hover:text-[#7F0284] py-2 px-4 rounded"
-              >
-                {updatePending ? "Updateting..." : "Update"}
-              </button>
-              <button
-                onClick={() => setModalEditOpen(false)}
-                className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 };

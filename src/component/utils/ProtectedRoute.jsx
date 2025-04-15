@@ -1,9 +1,15 @@
-import { useSelector } from "react-redux";
+
 import { Navigate } from "react-router-dom";
 
+import { useSelector } from "react-redux";
+
 const ProtectedRoute = ({ component: Component, ...rest }) => {
-  const token = localStorage.getItem("auth_token");
-  return token ? <Component {...rest} /> : <Navigate to="/sign-in" />;
+  
+  const isAuthorized = useSelector(state => state.user.isAuthorized)
+
+ console.log("hellloProteced" , isAuthorized)
+
+  return isAuthorized ? <Component {...rest} /> : <Navigate to="/sign-in" />;
 };
 
 export default ProtectedRoute;

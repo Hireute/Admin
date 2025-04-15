@@ -181,7 +181,7 @@ const JobList = () => {
                   "Image",
                   "Created",
                   "Status",
-                  "Created At",
+                  // "Created At",
                   "Actions"
                 ].map((heading, index) => (
                   <th
@@ -253,9 +253,9 @@ const JobList = () => {
                         {job?.status || "Pending"}
                       </span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 max-w-xs truncate">
+                    {/* <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 max-w-xs truncate">
                       {job?.createdAt || "N/A"}
-                    </td>
+                    </td> */}
                     <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center space-x-2">
                         <button

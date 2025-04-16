@@ -7,11 +7,11 @@ import { useSelector } from "react-redux";
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const userName = useSelector((state)=> state.user.user.firstName)
-  const lastName = useSelector((state)=> state.user.user.lastName)
+  // const userName = useSelector((state)=> state.user.user.firstName)
+  // const lastName = useSelector((state)=> state.user.user.lastName)
 
 
-  console.log(userName)
+  // console.log(userName)
   const redirectToHome = () => {
     navigate("/");
   };
@@ -27,7 +27,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3 pr-9">
-          <span className="text-gray-700 font-medium">{userName + " " + lastName}</span> 
+          {/* <span className="text-gray-700 font-medium">{userName + " " + lastName}</span>  */}
           <FaUserCircle className="text-3xl text-purple-800 cursor-pointer" />
         </div>
       </div>

@@ -100,7 +100,7 @@ const BlogPost = () => {
   };
 
   const handleUpdateBlog = () => {
-    console.log("ndsjkn");
+  
     const formData = new FormData();
     formData.append("title", newTitle);
     formData.append("description", newDescription);

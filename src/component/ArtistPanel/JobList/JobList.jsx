@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { AiFillDelete, AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { FaEdit, FaEye, FaFilter, FaSearch } from "react-icons/fa";
-import { useForm } from "react-hook-form";
+import { FaEye, FaFilter, FaSearch } from "react-icons/fa";
 import { useGetAllJobUserList } from "./https/useGetAllJobUserList";
 import useRevokeMutation from "./https/useRevokeMutation";
-import useSuspendMutation from "./https/useSuspendMutation";
 import Loader from "../../utils/Loader";
 import { BASE_IMAGE_URL } from "../../utils/exports";
 import useDeleteJob from "./https/useDeleteJob";
@@ -226,9 +224,6 @@ const JobList = () => {
                             className="h-10 w-10 rounded-full object-cover"
                             src={`${BASE_IMAGE_URL}/jobImg/${job.jobImg[0]}`}
                             alt="Job"
-                            // onError={(e) => {
-                            //   e.target.src = "/placeholder-job.png";
-                            // }}
                           />
                         ) : (
                           <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
@@ -253,9 +248,6 @@ const JobList = () => {
                         {job?.status || "Pending"}
                       </span>
                     </td>
-                    {/* <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 max-w-xs truncate">
-                      {job?.createdAt || "N/A"}
-                    </td> */}
                     <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center space-x-2">
                         <button
@@ -265,30 +257,26 @@ const JobList = () => {
                         >
                           <FaEye className="w-4 h-4" />
                         </button>
-                        
-                        {/* {job?.status !== "Approved" && ( */}
                           <button
-                            onClick={() => handleApproveJob(job._id)}
+                            onClick={() => handleApproveJob(job?._id)}
                             className="text-white  p-1 rounded-md bg-green-500 transition-colors"
                             title="Approve"
                             disabled={job?.status === "Approved"}
                           >
-                            {pendingActions[`approve-${job._id}`] ? (
+                            {pendingActions[`approve-${job?._id}`] ? (
                               <span className="w-4 h-4 border-2 border-green-600 border-t-transparent rounded-full animate-spin inline-block"></span>
                             ) : (
                               "Approve"
                             )}
                           </button>
-                        {/* )} */}
-                        
-                        {/* {job?.status !== "Rejected" && ( */}
+                      
                           <button
                             onClick={() => handleRejectJob(job._id)}
                             className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50 transition-colors"
                             title="Reject"
-                            disabled={pendingActions[`reject-${job._id}`]}
+                            disabled={pendingActions[`reject-${job?._id}`]}
                           >
-                            {pendingActions[`reject-${job._id}`] ? (
+                            {pendingActions[`reject-${job?._id}`] ? (
                               <span className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin inline-block"></span>
                             ) : (
                               "Reject"

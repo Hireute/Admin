@@ -78,10 +78,6 @@ const FaqForm = () => {
   };
 
   const handleDeleteFaq = (id) => {
-
-    console.log(id)
-
-    
     deleteFaq(id);
   };
 
@@ -141,7 +137,7 @@ const FaqForm = () => {
         </tbody>
       </table>
 
-      {/* Add FAQ Modal */}
+
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center p-4">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
@@ -182,7 +178,7 @@ const FaqForm = () => {
         </div>
       )}
 
-      {/* Edit FAQ Modal */}
+    
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center p-4">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">

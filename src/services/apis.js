@@ -48,6 +48,12 @@ export const shipmentendpoints = {
 
 
 
+  TRANSFER_AMOUNT: BASE_URL + "/api/admin/transfer-amount",
+ 
+
+
+
+
 
   SUSPEND_USER: BASE_URL + "/api/admin/user-job-suspended",
   REVOKE_USER: BASE_URL + "/api/admin/user-job-approved",

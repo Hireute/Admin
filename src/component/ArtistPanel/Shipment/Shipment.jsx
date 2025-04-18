@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { AiFillEye, AiFillDelete, AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import {
+  AiFillEye,
+  AiFillDelete,
+  AiOutlineLeft,
+  AiOutlineRight,
+} from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { useGetAllUteList } from "./https/useGetAllUteList";
 import { BASE_IMAGE_URL } from "../../utils/exports";
@@ -12,18 +17,10 @@ const ShipmentTable = () => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [viewingFaq, setViewingFaq] = useState(null);
-  const [newImage, setNewImage] = useState(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pendingAction, setPendingAction] = useState(null);
   const itemsPerPage = 10;
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm();
 
   const { data, isLoading } = useGetAllUteList({
     page: currentPage,
@@ -31,42 +28,6 @@ const ShipmentTable = () => {
   });
 
   const totalPages = Math.ceil((data?.totalCount || 0) / itemsPerPage);
-
-  const onSubmit = (data) => {
-    if (editingId !== null) {
-      setFaqs((prev) =>
-        prev.map((faq) => (faq.id === editingId ? { ...faq, ...data } : faq))
-      );
-    } else {
-      const newFaq = {
-        id: String(Date.now()),
-        ...data,
-        status: "Pending",
-      };
-      setFaqs([...faqs, newFaq]);
-    }
-    reset();
-    setEditingId(null);
-    setAddModalOpen(false);
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setNewImage(URL.createObjectURL(file));
-    }
-  };
-
-  const handleEditFaq = (id) => {
-    const faq = faqs.find((faq) => faq.id === id);
-    if (faq) {
-      Object.entries(faq).forEach(([key, value]) => {
-        setValue(key, value);
-      });
-      setEditingId(id);
-      setAddModalOpen(true);
-    }
-  };
 
   const handleViewFaq = (faq) => {
     setViewingFaq(faq);
@@ -99,17 +60,19 @@ const ShipmentTable = () => {
     }
   };
 
-  if (isLoading) return (
-    <div className="flex justify-center items-center h-64">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      </div>
+    );
 
   return (
     <div className="container mx-auto p-4 md:p-6">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-        <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 sm:mb-0">UTE Management</h1>
-       
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 sm:mb-0">
+          UTE Management
+        </h1>
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -137,9 +100,7 @@ const ShipmentTable = () => {
                     key={index}
                     className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-wider ${
                       index === 0 ? "rounded-tl-lg" : ""
-                    } ${
-                      index === 12 ? "rounded-tr-lg" : ""
-                    }`}
+                    } ${index === 12 ? "rounded-tr-lg" : ""}`}
                   >
                     {heading}
                   </th>
@@ -149,7 +110,10 @@ const ShipmentTable = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {data?.data?.length > 0 ? (
                 data.data.map((faq) => (
-                  <tr key={faq._id} className="hover:bg-gray-50 transition-colors">
+                  <tr
+                    key={faq._id}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
                     <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
                       {faq?.fullName || "N/A"}
                     </td>
@@ -165,7 +129,9 @@ const ShipmentTable = () => {
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                       {faq?.licenceExpireDate
-                        ? faq.licenceExpireDate?.licenceExpireMonth + "/" + faq.licenceExpireDate?.licenceExpireYear 
+                        ? faq.licenceExpireDate?.licenceExpireMonth +
+                          "/" +
+                          faq.licenceExpireDate?.licenceExpireYear
                         : "N/A"}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
@@ -196,7 +162,7 @@ const ShipmentTable = () => {
                           />
                         ) : (
                           <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                           <FaCar />
+                            <FaCar />
                           </div>
                         )}
                       </div>
@@ -229,42 +195,46 @@ const ShipmentTable = () => {
 
                         {/* {faq?.status === "Pending" ? (
                           <> */}
-                            <button
-                              onClick={() => handleStatusChange(faq._id, "Approved")}
-                              className="bg-green-500 hover:bg-green-600 text-white text-xs px-2 py-1 rounded disabled:opacity-50 transition-colors"
-                              disabled={
-                                faq?.status === "Approved" ||
-                                (isPending &&
-                                  pendingAction?.id === faq._id &&
-                                  pendingAction?.status === "Approved")
-                              }
-                              title="Approve"
-                            >
-                              {isPending &&
+                        <button
+                          onClick={() =>
+                            handleStatusChange(faq._id, "Approved")
+                          }
+                          className="bg-green-500 hover:bg-green-600 text-white text-xs px-2 py-1 rounded disabled:opacity-50 transition-colors"
+                          disabled={
+                            faq?.status === "Approved" ||
+                            (isPending &&
                               pendingAction?.id === faq._id &&
-                              pendingAction?.status === "Approved"
-                                ? "Processing"
-                                : "Approve"}
-                            </button>
-                          {/* </> */}
+                              pendingAction?.status === "Approved")
+                          }
+                          title="Approve"
+                        >
+                          {isPending &&
+                          pendingAction?.id === faq._id &&
+                          pendingAction?.status === "Approved"
+                            ? "Processing"
+                            : "Approve"}
+                        </button>
+                        {/* </> */}
                         {/* ) : ( */}
-                          <button
-                            onClick={() => handleStatusChange(faq._id, "Rejected")}
-                            className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded disabled:opacity-50 transition-colors"
-                            disabled={
-                              faq?.status === "Rejected" ||
-                              (isPending &&
-                                pendingAction?.id === faq._id &&
-                                pendingAction?.status === "Rejected")
-                            }
-                            title="Reject"
-                          >
-                            {isPending &&
-                            pendingAction?.id === faq._id &&
-                            pendingAction?.status === "Rejected"
-                              ? "Processing"
-                              : "Reject"}
-                          </button>
+                        <button
+                          onClick={() =>
+                            handleStatusChange(faq._id, "Rejected")
+                          }
+                          className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded disabled:opacity-50 transition-colors"
+                          disabled={
+                            faq?.status === "Rejected" ||
+                            (isPending &&
+                              pendingAction?.id === faq._id &&
+                              pendingAction?.status === "Rejected")
+                          }
+                          title="Reject"
+                        >
+                          {isPending &&
+                          pendingAction?.id === faq._id &&
+                          pendingAction?.status === "Rejected"
+                            ? "Processing"
+                            : "Reject"}
+                        </button>
                         {/* )} */}
 
                         <button
@@ -296,9 +266,12 @@ const ShipmentTable = () => {
                           d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         ></path>
                       </svg>
-                      <p className="text-lg font-medium text-gray-700">No UTE Listings Found</p>
+                      <p className="text-lg font-medium text-gray-700">
+                        No UTE Listings Found
+                      </p>
                       <p className="text-sm max-w-md mt-2">
-                        There are currently no UTE listings available. Check back later or add a new UTE.
+                        There are currently no UTE listings available. Check
+                        back later or add a new UTE.
                       </p>
                     </div>
                   </td>
@@ -329,15 +302,27 @@ const ShipmentTable = () => {
             <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm text-gray-700">
-                  Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to{" "}
+                  Showing{" "}
                   <span className="font-medium">
-                    {Math.min(currentPage * itemsPerPage, data?.totalCount || 0)}
+                    {(currentPage - 1) * itemsPerPage + 1}
                   </span>{" "}
-                  of <span className="font-medium">{data?.totalCount || 0}</span> results
+                  to{" "}
+                  <span className="font-medium">
+                    {Math.min(
+                      currentPage * itemsPerPage,
+                      data?.totalCount || 0
+                    )}
+                  </span>{" "}
+                  of{" "}
+                  <span className="font-medium">{data?.totalCount || 0}</span>{" "}
+                  results
                 </p>
               </div>
               <div>
-                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                <nav
+                  className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                  aria-label="Pagination"
+                >
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
@@ -388,74 +373,114 @@ const ShipmentTable = () => {
       </div>
 
       <div className="flex justify-end items-center space-x-2 mt-5">
-          <span className="text-sm text-gray-600">
-            Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-            {Math.min(currentPage * itemsPerPage, data?.totalCount || 0)} of{" "}
-            {data?.totalCount || 0} entries
-          </span>
-        </div>
+        <span className="text-sm text-gray-600">
+          Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+          {Math.min(currentPage * itemsPerPage, data?.totalCount || 0)} of{" "}
+          {data?.totalCount || 0} entries
+        </span>
+      </div>
 
       {isViewModalOpen && viewingFaq && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-2xl max-h-[90vh] flex flex-col">
             <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800">UTE Details</h2>
+              <h2 className="text-xl font-semibold text-gray-800">
+                UTE Details
+              </h2>
             </div>
             <div className="overflow-y-auto p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Full Name</h3>
-                    <p className="mt-1 text-sm text-gray-900">{viewingFaq?.fullName || "N/A"}</p>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Full Name
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-900">
+                      {viewingFaq?.fullName || "N/A"}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Description</h3>
-                    <p className="mt-1 text-sm text-gray-900">{viewingFaq?.description || "N/A"}</p>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Description
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-900">
+                      {viewingFaq?.description || "N/A"}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Licence Number</h3>
-                    <p className="mt-1 text-sm text-gray-900">{viewingFaq?.licenceNumber || "N/A"}</p>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Licence Number
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-900">
+                      {viewingFaq?.licenceNumber || "N/A"}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Expiry Date</h3>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Expiry Date
+                    </h3>
                     <p className="mt-1 text-sm text-gray-900">
                       {viewingFaq?.licenceExpireDate
-                        ? new Date(viewingFaq.licenceExpireDate).toLocaleDateString()
+                        ? new Date(
+                            viewingFaq.licenceExpireDate
+                          ).toLocaleDateString()
                         : "N/A"}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Service Cities</h3>
-                    <p className="mt-1 text-sm text-gray-900">{viewingFaq?.serviceCity || "N/A"}</p>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Service Cities
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-900">
+                      {viewingFaq?.serviceCity || "N/A"}
+                    </p>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Location</h3>
-                    <p className="mt-1 text-sm text-gray-900">{viewingFaq?.location || "N/A"}</p>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Location
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-900">
+                      {viewingFaq?.location || "N/A"}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">UTE Model</h3>
-                    <p className="mt-1 text-sm text-gray-900">{viewingFaq?.uteModel || "N/A"}</p>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      UTE Model
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-900">
+                      {viewingFaq?.uteModel || "N/A"}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Chassis Number</h3>
-                    <p className="mt-1 text-sm text-gray-900">{viewingFaq?.chesisNumber || "N/A"}</p>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Chassis Number
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-900">
+                      {viewingFaq?.chesisNumber || "N/A"}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Availability</h3>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Availability
+                    </h3>
                     <p className="mt-1 text-sm text-gray-900">
                       {viewingFaq?.uteAvailble?.join(", ") || "N/A"}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Budget</h3>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Budget
+                    </h3>
                     <p className="mt-1 text-sm text-gray-900">
                       {viewingFaq?.budget ? `$${viewingFaq.budget}` : "N/A"}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Status</h3>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Status
+                    </h3>
                     <p className="mt-1 text-sm">
                       <span
                         className={`px-2 py-1 text-xs font-semibold rounded-full ${
@@ -473,11 +498,16 @@ const ShipmentTable = () => {
                 </div>
               </div>
               <div className="mt-6">
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Images</h3>
+                <h3 className="text-sm font-medium text-gray-500 mb-2">
+                  Images
+                </h3>
                 <div className="flex flex-wrap gap-4">
                   {viewingFaq?.uteImages?.length > 0 ? (
                     viewingFaq.uteImages.map((image, index) => (
-                      <div key={index} className="w-32 h-32 rounded-md overflow-hidden border border-gray-200">
+                      <div
+                        key={index}
+                        className="w-32 h-32 rounded-md overflow-hidden border border-gray-200"
+                      >
                         <img
                           src={`${BASE_IMAGE_URL}/uteImages/${image}`}
                           alt={`UTE ${index + 1}`}
@@ -488,6 +518,16 @@ const ShipmentTable = () => {
                   ) : (
                     <p className="text-sm text-gray-500">No images available</p>
                   )}
+                </div>
+
+                <div>
+                  {viewingFaq?.licenceImage ?  <div className="w-32 h-32 rounded-md overflow-hidden border border-gray-200">
+                    <img
+                      src={`${BASE_IMAGE_URL}/licenceImage/${viewingFaq?.licenceImage}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>  : null}
+                 
                 </div>
               </div>
             </div>
@@ -507,3 +547,8 @@ const ShipmentTable = () => {
 };
 
 export default ShipmentTable;
+
+
+
+
+

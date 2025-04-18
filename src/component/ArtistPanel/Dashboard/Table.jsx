@@ -38,18 +38,6 @@ const Table = ({ shipmentData, currentPage, setCurrentPage, data }) => {
     setDeleteIndex(id);
   };
 
-  // const confirmDeleteshipment = async () => {
-  //   await mutateAsync({ id: deleteIndex, token });
-  //   setDeleteModalOpen(false);
-  //   setDeleteIndex(null);
-  // };
-
-  // const confirmDelete = () => {
-  //   const updatedData = data.filter((_, index) => index !== deleteIndex);
-  //   setData(updatedData);
-  //   setDeleteModalOpen(false);
-  // };
-
   return (
     <div className="rounded-lg mt-6">
       <h1 className="text-2xl mb-5 font-semibold text-[#333843] leading-7">

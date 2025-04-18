@@ -17,7 +17,7 @@ const FAQModal = ({
 
   return (
     <div
-      // id="modalOverlay"
+
       onClick={handleClickOutside}
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >

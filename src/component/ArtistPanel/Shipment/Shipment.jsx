@@ -520,10 +520,12 @@ const ShipmentTable = () => {
                   )}
                 </div>
 
+              <h1>Licence Image</h1>
+
                 <div>
                   {viewingFaq?.licenceImage ?  <div className="w-32 h-32 rounded-md overflow-hidden border border-gray-200">
                     <img
-                      src={`${BASE_IMAGE_URL}/licenceImage/${viewingFaq?.licenceImage}`}
+                      src={`${BASE_IMAGE_URL}/licences/${viewingFaq?.licenceImage}`}
                       className="w-full h-full object-cover"
                     />
                   </div>  : null}

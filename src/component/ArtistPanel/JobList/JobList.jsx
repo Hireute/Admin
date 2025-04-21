@@ -87,9 +87,9 @@ const JobList = () => {
   };
 
   const handleDeleteJob = (id) => {
-    if (window.confirm("Are you sure you want to delete this job?")) {
+    // if (window.confirm("Are you sure you want to delete this job?")) {
       deleteJob(id);
-    }
+    // }
   };
 
   const formatDate = (dateString) => {

@@ -30,7 +30,7 @@ const UsersList = () => {
   const handleActiveToggle = (id, currentStatus) => {
     const newData = {
       id: id,
-      isActive: currentStatus ? "inactive" : "active",
+      isActive: currentStatus ? "inActive" : "active",
     };
     setPendingId(id);
     mutateAsync(newData)

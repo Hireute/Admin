@@ -7,20 +7,10 @@ import { AiFillDelete } from "react-icons/ai";
 import useDeleteUser from "./https/useDeleteUser";
 
 const UsersList = () => {
-  const [isAddModalOpen, setAddModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState(null);
   const [pendingId, setPendingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm();
 
   const { data, isLoading } = useGetAllUserList({ page: currentPage, limit, searchTerm });
   
@@ -78,7 +68,6 @@ const UsersList = () => {
         </div>
       </div>
 
-
       <div className="bg-white rounded-lg shadow overflow-hidden">
       <div className="overflow-x-auto" >
       <table className="w-full border min-w-full bg-white shadow-md rounded-lg">
@@ -118,11 +107,11 @@ const UsersList = () => {
                         ? "bg-red-600 hover:bg-red-700"
                         : "bg-green-600 hover:bg-green-700"
                     }`}
-                    onClick={() => handleActiveToggle(item._id, item?.isActive)}
+                    onClick={() => handleActiveToggle(item?._id, item?.isActive)}
                     style={{ padding: "5px 14px" }}
-                    disabled={pendingId === item._id}
+                    disabled={pendingId === item?._id}
                   >
-                    {pendingId === item._id
+                    {pendingId === item?._id
                       ? "Processing..."
                       : item?.isActive
                       ? "Deactivate"
@@ -130,7 +119,7 @@ const UsersList = () => {
                   </button>
                   <AiFillDelete
                     className="text-red-600 cursor-pointer text-xl hover:text-red-800"
-                    onClick={() => handleDeleteUser(item._id)}
+                    onClick={() => handleDeleteUser(item?._id)}
                   />
                 </td>
               </tr>
@@ -146,8 +135,6 @@ const UsersList = () => {
       </table>
       </div>
       </div>
-
-      
 
       {totalPages > 1 && (
         <div className="mt-4 flex justify-center items-center gap-2">

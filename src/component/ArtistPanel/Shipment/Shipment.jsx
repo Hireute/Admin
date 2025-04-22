@@ -5,7 +5,6 @@ import {
   AiOutlineLeft,
   AiOutlineRight,
 } from "react-icons/ai";
-import { useForm } from "react-hook-form";
 import { useGetAllUteList } from "./https/useGetAllUteList";
 import { BASE_IMAGE_URL } from "../../utils/exports";
 import useGetApproveRejectMutaion from "./https/useGetApproveRejectMutaion";
@@ -13,11 +12,8 @@ import useDeleteUte from "./https/useDeleteUte";
 import { FaCar } from "react-icons/fa";
 
 const ShipmentTable = () => {
-  const [isAddModalOpen, setAddModalOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState(null);
   const [viewingFaq, setViewingFaq] = useState(null);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [pendingAction, setPendingAction] = useState(null);
   const itemsPerPage = 10;
@@ -193,8 +189,6 @@ const ShipmentTable = () => {
                           <AiFillEye className="w-5 h-5" />
                         </button>
 
-                        {/* {faq?.status === "Pending" ? (
-                          <> */}
                         <button
                           onClick={() =>
                             handleStatusChange(faq._id, "Approved")
@@ -214,8 +208,7 @@ const ShipmentTable = () => {
                             ? "Processing"
                             : "Approve"}
                         </button>
-                        {/* </> */}
-                        {/* ) : ( */}
+                      
                         <button
                           onClick={() =>
                             handleStatusChange(faq._id, "Rejected")

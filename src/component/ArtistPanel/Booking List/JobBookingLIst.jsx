@@ -7,7 +7,7 @@ import { useTransferMutation } from "./https/useTransferMutation";
 const JobBookingList = () => {
   const { data, isLoading } = useGetJobList();
   const [processingId, setProcessingId] = useState(null);
-  const { mutateAsync, isPending } = useTransferMutation();
+  const { mutateAsync, isPending } = useTransferMutation(setProcessingId);
 
   const handleTransferAmount = (data) => {
     setProcessingId(data?._id);
@@ -17,15 +17,16 @@ const JobBookingList = () => {
         id: data?.uteBy,
       };
       console.log(values);
-      mutateAsync(values).then(() => {
+      mutateAsync(values).then((res) => {
         setProcessingId(null);
+        console.log("res")
       });
     } catch (error) {
-      console.error(error);
+      console.log(error);
       setProcessingId(null);
     }
   };
-
+  
   const [bookings, setBookings] = useState({
     data: [
       {
@@ -194,7 +195,7 @@ const JobBookingList = () => {
                           onClick={() => handleTransferAmount(booking)}
                         >
                           {processingId === booking._id ? (
-                            <div className="flex items-center">
+                            <div className={`flex items-center ${isPending ? "cursor-not-allowed" :""}`}>
                               <svg
                                 className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                                 xmlns="http://www.w3.org/2000/svg"

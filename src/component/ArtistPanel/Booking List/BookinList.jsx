@@ -8,7 +8,7 @@ const BookinList = () => {
   const bookings = data?.data || [];
   const [processingId, setProcessingId] = useState(null);
 
-  const { mutateAsync, isPending } = useTransferMutation();
+  const { mutateAsync, isPending } = useTransferMutation(setProcessingId);
 
   const handleTransferAmount = (data) => {
     setProcessingId(data?._id);

@@ -21,6 +21,7 @@ import { BsCardChecklist } from "react-icons/bs";
 import { GiMoneyStack } from "react-icons/gi";
 import { RiFileList3Line } from "react-icons/ri";
 import { FaRegQuestionCircle } from "react-icons/fa";
+import { FaClipboardList } from "react-icons/fa";
 export const sections = [
   {
     key: "dashboard",
@@ -48,7 +49,7 @@ export const sections = [
   },
   {
     key: "job-booking-list",
-    icon: <BsCardChecklist size={28} />,
+    icon: <FaClipboardList size={28} />,
     label: "Job Booking List",
     path: "job-booking-list",
   },
@@ -76,7 +77,6 @@ export const sections = [
     label: "Change Password",
     path: "change-password",
   },
-
   {
     key: "blogs",
     icon: <RiBloggerLine size={28} />,

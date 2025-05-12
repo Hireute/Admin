@@ -3,13 +3,13 @@ import toast from "react-hot-toast";
 import axiosInstance from "../../../../services/axios";
 import { blogEndpoints,shipmentendpoints } from "../../../../services/apis";
 
-async function tansferAmount(values) {
+async function tansferManualAmount(values) {
   return axiosInstance.post(`${shipmentendpoints.TRANSFER_AMOUNT}/${values?.id}/${values?.bookingId}`);
 }
-export const useTransferMutation = (setProcessingId) => {
+export const useTransferManualJobeMutaion = (setProcessingId) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: tansferAmount,
+    mutationFn: tansferManualAmount,
 
     onSuccess: (res) => {
    

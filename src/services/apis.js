@@ -43,12 +43,22 @@ export const shipmentendpoints = {
   ALL_BOOKING_UTE_LIST: BASE_URL + "/api/admin/ute-list",
   ALL_BOOKING_JOB_LIST: BASE_URL + "/api/admin/job-list",
 
+  GET_BANK_INFO: BASE_URL + "/api/admin/get-account-detail",
+
+
 
   ALL_PAYMENT_LIST: BASE_URL + "/api/admin/payment-history",
+
+  ALL_MANUAL_PAYMENT_LIST: BASE_URL + "/api/admin/get-update-manual-status",  
+
+  ACCEPT_MANUAL_PAYMENT: BASE_URL + "/api/admin/update-manual-status", // will have to change
 
 
 
   TRANSFER_AMOUNT: BASE_URL + "/api/admin/transfer-amount",
+
+
+  MANUAL_TRANSFER_AMOUNT: BASE_URL + "/api/admin/transfer-manual-payment",
  
 
 

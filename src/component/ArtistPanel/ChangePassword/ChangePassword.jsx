@@ -1,10 +1,11 @@
-import axios from "axios";
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { authendpoints } from "../../../services/apis";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../../services/axios";
 
 const ChangePassword = () => {
   const [showPassword, setShowPassword] = useState({
@@ -24,18 +25,11 @@ const ChangePassword = () => {
     formState: { errors },
   } = useForm();
 
-  const token = localStorage.getItem("token");
-  console.log("tokentoken", token);
-
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     console.log("Password Changed:", data);
     try {
-      const response = await axios.post(authendpoints.CHANGE_PASSWORD, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axiosInstance.post(authendpoints.CHANGE_PASSWORD, data);
 
       toast.success(response?.data?.message);
       localStorage.removeItem("token");
@@ -73,7 +67,6 @@ const ChangePassword = () => {
             )}
           </div>
 
-          {/* New Password */}
           <div className="mb-4 relative">
             <label className="block text-gray-700 mb-1">New Password</label>
             <input
@@ -100,7 +93,6 @@ const ChangePassword = () => {
             )}
           </div>
 
-          {/* Confirm Password */}
           <div className="mb-4 relative">
             <label className="block text-gray-700 mb-1">Confirm Password</label>
             <input

@@ -16,6 +16,7 @@ const JobList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [budgetFilter, setBudgetFilter] = useState("none");
   const [showFilters, setShowFilters] = useState(false);
+    const itemsPerPage = 10;
 
   const {
     data,
@@ -274,7 +275,7 @@ const JobList = () => {
                             onClick={() => handleRejectJob(job._id)}
                             className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50 transition-colors"
                             title="Reject"
-                            disabled={pendingActions[`reject-${job?._id}`]}
+                            disabled={pendingActions[`reject-${job?._id}`]  || job?.status === "Approved" || pendingActions[`approve-${job?._id}`]}
                           >
                             {pendingActions[`reject-${job?._id}`] ? (
                               <span className="w-4 h-4 border-2 border-red-600 border-t-transparent rounded-full animate-spin inline-block"></span>
@@ -327,19 +328,19 @@ const JobList = () => {
           </table>
         </div>
 
-        {totalPages > 1 && (
+         {totalPages > 1 && (
           <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 rounded-b-lg">
             <div className="flex-1 flex justify-between sm:hidden">
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
-                disabled={!paginationInfo?.hasPrevious || isFetching}
+                disabled={currentPage === 1}
                 className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
               >
                 Previous
               </button>
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
-                disabled={!paginationInfo?.hasNext || isFetching}
+                disabled={currentPage === totalPages}
                 className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
               >
                 Next
@@ -348,18 +349,30 @@ const JobList = () => {
             <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm text-gray-700">
-                  Showing <span className="font-medium">{(currentPage - 1) * 10 + 1}</span> to{" "}
+                  Showing{" "}
                   <span className="font-medium">
-                    {Math.min(currentPage * 10, totalCount)}
+                    {(currentPage - 1) * itemsPerPage + 1}
                   </span>{" "}
-                  of <span className="font-medium">{totalCount}</span> results
+                  to{" "}
+                  <span className="font-medium">
+                    {Math.min(
+                      currentPage * itemsPerPage,
+                      data?.totalCount || 0
+                    )}
+                  </span>{" "}
+                  of{" "}
+                  <span className="font-medium">{data?.totalCount || 0}</span>{" "}
+                  results
                 </p>
               </div>
               <div>
-                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                <nav
+                  className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                  aria-label="Pagination"
+                >
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={!paginationInfo?.hasPrevious || isFetching}
+                    disabled={currentPage === 1}
                     className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
                   >
                     <span className="sr-only">Previous</span>
@@ -386,7 +399,6 @@ const JobList = () => {
                             ? "z-10 bg-purple-600 border-purple-600 text-white"
                             : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
                         }`}
-                        disabled={isFetching}
                       >
                         {pageNum}
                       </button>
@@ -394,7 +406,7 @@ const JobList = () => {
                   })}
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={!paginationInfo?.hasNext || isFetching}
+                    disabled={currentPage === totalPages}
                     className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
                   >
                     <span className="sr-only">Next</span>
@@ -405,6 +417,15 @@ const JobList = () => {
             </div>
           </div>
         )}
+      </div>
+
+      <div className="flex justify-end items-center space-x-2 mt-5">
+        <span className="text-sm text-gray-600">
+          Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+          {Math.min(currentPage * itemsPerPage, data?.totalCount || 0)} of{" "}
+          {data?.totalCount || 0} entries
+        </span>
+      
       </div>
 
       {isViewModalOpen && selectedJob && (
@@ -509,3 +530,6 @@ const JobList = () => {
 };
 
 export default JobList;
+
+
+

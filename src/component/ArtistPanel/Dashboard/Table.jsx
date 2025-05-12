@@ -24,10 +24,6 @@ const table_head = [
 
 const Table = ({ shipmentData, currentPage, setCurrentPage, data }) => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [deleteIndex, setDeleteIndex] = useState(null);
-  const { token } = useSelector((state) => state.user);
-
-  // const { mutateAsync, isPending } = DeleteShipment();
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

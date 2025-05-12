@@ -3,11 +3,20 @@ import { AiFillDelete, AiOutlineLoading3Quarters } from "react-icons/ai";
 
 import { useGetJobList } from "./https/useGetJobList";
 import { useTransferMutation } from "./https/useTransferMutation";
+import ManualBookingList from "./ManualBookingList";
+import ManualJobListing from "./ManualJobListing";
 
 const JobBookingList = () => {
   const { data, isLoading } = useGetJobList();
   const [processingId, setProcessingId] = useState(null);
   const { mutateAsync, isPending } = useTransferMutation(setProcessingId);
+  const [activeTab, setActiveTab] = useState('stripe');
+
+  
+  const manualBookings = data?.data?.filter(item => item.transactionId) || [];
+  
+  const stripeBookings = data?.data?.filter(item => !item.transactionId) || [];
+
 
   const handleTransferAmount = (data) => {
     setProcessingId(data?._id);
@@ -89,11 +98,46 @@ const JobBookingList = () => {
         <h1 className="text-2xl font-bold text-gray-800">Job Bookings</h1>
       </div>
 
-      {isLoading && !bookings?.data?.length ? (
+
+      <div className="border-b border-gray-200 mb-6">
+        <nav className="-mb-px flex space-x-8">
+          <button
+            onClick={() => setActiveTab('stripe')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'stripe'
+                ? 'border-purple-700 text-purple-700'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Stripe Payments
+          </button>
+          <button
+            onClick={() => setActiveTab('manual')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'manual'
+                ? 'border-purple-700 text-purple-700'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Manual Payments
+          </button>
+        </nav>
+      </div>
+
+
+
+      {activeTab === 'manual' ? (
+        <ManualJobListing
+          data={manualBookings} 
+          handleTransferAmount={handleTransferAmount} handleDelete={handleDelete} processingId={processingId} isPending={isPending} 
+        />
+      ) : (
+        <>
+           {isLoading && !bookings?.data?.length ? (
         <div className="flex justify-center items-center h-64">
           <AiOutlineLoading3Quarters className="animate-spin text-4xl text-purple-700" />
         </div>
-      ) : data?.data?.length === 0 ? (
+      ) : stripeBookings?.data?.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg shadow">
           <p className="text-gray-500">No bookings found</p>
         </div>
@@ -134,7 +178,7 @@ const JobBookingList = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {data?.data?.map((booking) => (
+                {stripeBookings?.map((booking) => (
                   <tr key={booking?._id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
@@ -238,6 +282,28 @@ const JobBookingList = () => {
           </div>
         </div>
       )}
+        </>
+      )}
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+     
     </div>
   );
 };

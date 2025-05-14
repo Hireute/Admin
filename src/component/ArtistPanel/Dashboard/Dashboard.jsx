@@ -20,8 +20,8 @@ const Dashboard = () => {
 
   const stats = [
     {
-      title: "Total Ute Users",
-      value: data?.totalActiveUser + data?.totalDeactiveUser || 0,
+      title: "Total Users",
+      value: data?.totalUser || 0,
       icon: <FaUsers className="text-white" size={20} />,
       bgColor: "bg-[#7F0284]",
       link: "all-users"

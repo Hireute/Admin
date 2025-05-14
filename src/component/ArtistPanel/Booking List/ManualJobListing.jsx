@@ -45,17 +45,22 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
       ...paymentDetails,
       amount: booking.amount,
     });
+    console.log("Phele wala")
     setId(booking?.uteBy);
     setShowPaymentModal(true);
   };
 
  
   const handlePayNow = () => {
+
+    console.log("dusrawala wala")
+
+
     mutate(selectedBooking?._id);
     setProcessingId(selectedBooking._id);
     setShowPaymentModal(false);
     setProcessingId(null)
-    handleTransferAmount(selectedBooking, paymentDetails);
+    
   };
 
   return (

@@ -17,7 +17,7 @@ export const useTransferManualUteMutaion = (setProcessingId) => {
         queryKey: [shipmentendpoints.ALL_BOOKING_JOB_LIST],
         refetchType: "all",
       });
-      queryClient.refetchQueries([blogEndpoints.ALL_BLOG]);
+      
      
       toast.success(res.data.message);
     },

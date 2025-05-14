@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import axiosInstance from "../../../../services/axios";
-import { blogEndpoints,shipmentendpoints } from "../../../../services/apis";
+import { shipmentendpoints } from "../../../../services/apis";
 
 async function tansferManualAmount(id) {
   return axiosInstance.put(`${shipmentendpoints.MANUAL_TRANSFER_AMOUNT}/${id}`);

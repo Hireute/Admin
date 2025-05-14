@@ -32,7 +32,7 @@ const ManualPayments = ({
   );
 
   const renderData = activeTab === "ute" ?  filteredUtePayments : filteredPayments
-    console.log(renderData)
+
 
   const handleReceiptClick = (paymentImage) => {
     setSelectedReceipt(paymentImage);

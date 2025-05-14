@@ -6,13 +6,7 @@ import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  // const isAuthorized = useSelector((state)=> state.user.isAuthorized)
-
-  // const userName = useSelector((state)=> state.user.user.firstName)
-  // const lastName = useSelector((state)=> state.user.user.lastName)
-
-
-  // console.log(userName)
+ 
   const redirectToHome = () => {
     navigate("/");
   };

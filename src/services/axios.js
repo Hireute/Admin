@@ -35,7 +35,7 @@ export function setup() {
   axiosInstance.interceptors.response.use(
     (res) => res,
     async (err) => {
-      console.log(err)
+    
       // if (ERROR_MSGs.includes(err?.response?.data.message)) {
       //   dispatch(setIsAuthorized(false));
       // }

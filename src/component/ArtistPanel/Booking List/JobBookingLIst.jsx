@@ -25,13 +25,13 @@ const JobBookingList = () => {
         bookingId: data?._id,
         id: data?.uteBy,
       };
-      console.log(values);
+    
       mutateAsync(values).then((res) => {
         setProcessingId(null);
-        console.log("res")
+      
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setProcessingId(null);
     }
   };

@@ -68,7 +68,7 @@ const FaqForm = () => {
   const handleEditFaq = (id) => {
     const faq = data?.find((faq) => faq._id === id);
 
-    console.log(faq);
+   
     if (faq) {
       setEditQuestion(faq.question);
       setEditAnswer(faq.answer);

@@ -14,7 +14,7 @@ const UsersList = () => {
 
   const { data, isLoading } = useGetAllUserList({ page: currentPage, limit, searchTerm });
   
-  const { mutateAsync } = useActiveMutation();
+  const { mutateAsync , isPending  } = useActiveMutation();
   const { mutate: deleteUser } = useDeleteUser();
    const itemsPerPage = 10;
 
@@ -28,7 +28,7 @@ const UsersList = () => {
       .finally(() => {
         setPendingId(null);
       });
-    setEditingId(null);
+    
   };
 
   const handleDeleteUser = (id) => {
@@ -110,7 +110,7 @@ const UsersList = () => {
                     }`}
                     onClick={() => handleActiveToggle(item?._id, item?.isActive)}
                     style={{ padding: "5px 14px" }}
-                    disabled={pendingId === item?._id}
+                    disabled={pendingId === item?._id || isPending}
                   >
                     {pendingId === item?._id
                       ? "Processing..."

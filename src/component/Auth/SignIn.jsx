@@ -63,10 +63,12 @@ const SignIn = () => {
         deleteCookie("rememberedEmail");
       }
       await mutateAsync(data);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error)
+    }
   };
 
-  console.log(errors);
+ 
   return (
     <div className="flex flex-col md:flex-row h-screen">
       <div className="md:w-1/2 relative">

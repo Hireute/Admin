@@ -18,13 +18,13 @@ const useDeleteQueries = () => {
     mutationFn: deleteQueriesMutation,
 
     onSuccess: async (res) => {
-      console.log(res);
+      
       queryClient.invalidateQueries({
         queryKey: [shipmentendpoints.ALL_QUERIES],
         refetchType: "all",
       });
 
-      console.log(res.data.message);
+      
 
       toast.success(res.data.message);
     },

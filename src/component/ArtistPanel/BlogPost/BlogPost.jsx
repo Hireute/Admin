@@ -95,7 +95,7 @@ const BlogPost = () => {
       setNewViews(blog.views);
       setNewComments(blog.comments);
       setEditingId(blog._id);
-      console.log("Opening modal for blog ID:", id);
+      
     }
   };
 

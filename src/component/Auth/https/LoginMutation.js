@@ -21,7 +21,7 @@ const SigInInMutation = () => {
 
       dispatch(setIsAuthorized(true));
 
-      console.log("haan true ho gaya hai")
+     
 
       navigate("/", {
         replace: true,

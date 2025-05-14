@@ -66,7 +66,7 @@ const Queries = () => {
 
     sendReply(replyData, {
       onSuccess: () => {
-        console.log("Reply sent successfully");
+       
         setSelectedQuery(null);
         setReplyMessage("");
       },

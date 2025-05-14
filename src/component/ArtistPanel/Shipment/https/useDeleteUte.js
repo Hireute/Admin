@@ -18,13 +18,13 @@ const useDeleteUte = () => {
     mutationFn: deleteUteMutation,
 
     onSuccess: async (res) => {
-      console.log(res);
+     
       queryClient.invalidateQueries({
         queryKey: [shipmentendpoints.ALL_UTE_LIST],
         refetchType: "all",
       });
 
-      console.log(res.data.message);
+   
 
       toast.success(res.data.message);
     },

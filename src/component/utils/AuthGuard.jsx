@@ -9,7 +9,7 @@ const AuthGuard = ( {children} ) => {
 const {isLoading} = useCheckIsAuthorized()
 
 
-console.log(isLoading)
+
 
 if(isLoading){
     return <Loader/>

@@ -6,7 +6,7 @@ import { faqendpoints } from "../../../../services/apis";
 
 async function FaqDelete( id ) {
 
-  console.log("this is from mutation" +id)
+  
   return axiosInstance.put(`${faqendpoints.DELETE_FAQ}/${id}`);
 }
 

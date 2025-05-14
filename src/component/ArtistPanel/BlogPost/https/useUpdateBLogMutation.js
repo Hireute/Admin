@@ -4,7 +4,7 @@ import axiosInstance from "../../../../services/axios";
 import { blogEndpoints, faqendpoints } from "../../../../services/apis";
 
 async function UpdateBLog(data) {
-  console.log("data contents:", data);
+ 
 
   return axiosInstance.put(
     blogEndpoints.UPADTE_BLOG + `/${data.id}`,

@@ -49,7 +49,7 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
     setShowPaymentModal(true);
   };
 
-  console.log(selectedBooking);
+ 
   const handlePayNow = () => {
     mutate(selectedBooking?._id);
     setProcessingId(selectedBooking._id);

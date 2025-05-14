@@ -18,13 +18,13 @@ const useDeleteJob = () => {
     mutationFn: deleteJobMutation,
 
     onSuccess: async (res) => {
-      console.log(res);
+     
       queryClient.invalidateQueries({
         queryKey: [shipmentendpoints.ALL_JOB_LIST],
         refetchType: "all",
       });
 
-      console.log(res.data.message);
+      
 
       toast.success(res.data.message);
     },

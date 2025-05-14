@@ -27,7 +27,7 @@ const ChangePassword = () => {
 
   const navigate = useNavigate();
   const onSubmit = async (data) => {
-    console.log("Password Changed:", data);
+   
     try {
       const response = await axiosInstance.post(authendpoints.CHANGE_PASSWORD, data);
 

@@ -18,7 +18,7 @@ const ForgetPasswordOtp = () => {
 
     onSuccess: async (res) => {
       dispatch(setEmail(res.data.email));
-      console.log("res.data.emailres.data.email", res.data.email);
+    
 
       localStorage.setItem("email", res.data.email);
       navigate("/otp", {

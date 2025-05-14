@@ -33,7 +33,7 @@ const ManualBookingList = ({ data, handleTransferAmount, handleDelete }) => {
   const handleManualTransferClick = (booking) => {
     setSelectedBooking(booking);
 
-    console.log(booking)
+   
 
     setPaymentDetails({
      
@@ -49,7 +49,7 @@ const ManualBookingList = ({ data, handleTransferAmount, handleDelete }) => {
 
  const { data: bankInfoData, isLoading } = useGetBankInfo({ id, showPaymentModal });
 
- console.log(bankInfoData)
+ 
 
 
 

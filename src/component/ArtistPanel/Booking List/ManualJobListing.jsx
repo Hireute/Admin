@@ -45,22 +45,17 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
       ...paymentDetails,
       amount: booking.amount,
     });
-    console.log("Phele wala")
+    
     setId(booking?.uteBy);
     setShowPaymentModal(true);
   };
 
  
   const handlePayNow = () => {
-
-    console.log("dusrawala wala")
-
-
     mutate(selectedBooking?._id);
-    setProcessingId(selectedBooking._id);
+    setProcessingId(selectedBooking?._id);
     setShowPaymentModal(false);
-    setProcessingId(null)
-    
+    setProcessingId(null);
   };
 
   return (
@@ -92,6 +87,9 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Created At
+                  </th>
+                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    Job Booking ID
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Is-Transfered
@@ -136,6 +134,12 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {booking?.createdAt}
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {booking?.jobBookingId}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">

@@ -11,9 +11,7 @@ const BookinList = () => {
 
   const { mutateAsync, isPending } = useTransferMutation(setProcessingId);
 
-  // Filter bookings with transactionId (for manual payments)
   const manualBookings = data?.data?.filter(item => item.transactionId) || [];
-  // Filter bookings without transactionId (for stripe payments)
   const stripeBookings = data?.data?.filter(item => !item.transactionId) || [];
 
   const handleTransferAmount = (data) => {
@@ -31,10 +29,6 @@ const BookinList = () => {
       setProcessingId(null);
     }
   };
-
-
-  
-
 
   const handleDeleteBooking = (id) => {
     console.log("Delete booking with id:", id);
@@ -85,7 +79,7 @@ const BookinList = () => {
         />
       ) : (
         <>
-          {stripeBookings.length === 0 ? (
+          {stripeBookings?.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-lg shadow">
               <p className="text-gray-500">No stripe bookings found</p>
             </div>
@@ -104,6 +98,7 @@ const BookinList = () => {
                         "Status",
                         "Pickup Address",
                         "Drop Address",
+                        "Job Booking ID",
                         "Is-Transfered",
                         "Actions",
                       ].map((heading, index) => (
@@ -117,7 +112,7 @@ const BookinList = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {stripeBookings.map((booking) => (
+                    {stripeBookings?.map((booking) => (
                       <tr
                         key={booking?._id}
                         className="hover:bg-gray-50 transition-colors text-center"
@@ -153,6 +148,9 @@ const BookinList = () => {
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate">
                           {`${booking?.dropAddress?.street}, ${booking?.dropAddress?.state} ${booking?.dropAddress?.postalCode}`}
+                        </td>
+                         <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate">
+                          {`${booking?.uteBookingId}`}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-white bg-orange-600 px-2 rounded-md tracking-tight">

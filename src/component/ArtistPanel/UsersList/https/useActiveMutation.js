@@ -6,7 +6,7 @@ import axiosInstance from "../../../../services/axios";
 
 async function ActiveDeactiveMutation(input) {
   return axiosInstance.put(
-    `${shipmentendpoints.ACTIVE_DEACTIVE}/${input.id}` , {status : input?.isActive},
+    `${shipmentendpoints.ACTIVE_DEACTIVE}/${input?.id}` , {status : input?.isActive},
     input
   );
 }

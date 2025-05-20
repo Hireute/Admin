@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { AiFillDelete, AiOutlineLoading3Quarters } from "react-icons/ai";
-
 import { useGetJobList } from "./https/useGetJobList";
 import { useTransferMutation } from "./https/useTransferMutation";
-import ManualBookingList from "./ManualBookingList";
 import ManualJobListing from "./ManualJobListing";
 
 const JobBookingList = () => {
@@ -11,12 +9,10 @@ const JobBookingList = () => {
   const [processingId, setProcessingId] = useState(null);
   const { mutateAsync, isPending } = useTransferMutation(setProcessingId);
   const [activeTab, setActiveTab] = useState('stripe');
-
   
   const manualBookings = data?.data?.filter(item => item.transactionId) || [];
   
   const stripeBookings = data?.data?.filter(item => !item.transactionId) || [];
-
 
   const handleTransferAmount = (data) => {
     setProcessingId(data?._id);
@@ -98,7 +94,6 @@ const JobBookingList = () => {
         <h1 className="text-2xl font-bold text-gray-800">Job Bookings</h1>
       </div>
 
-
       <div className="border-b border-gray-200 mb-6">
         <nav className="-mb-px flex space-x-8">
           <button
@@ -123,8 +118,6 @@ const JobBookingList = () => {
           </button>
         </nav>
       </div>
-
-
 
       {activeTab === 'manual' ? (
         <ManualJobListing
@@ -168,6 +161,10 @@ const JobBookingList = () => {
                     Created At
                   </th>
 
+
+<th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    Job Booking ID
+                  </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Is-Transfered
                   </th>
@@ -218,6 +215,12 @@ const JobBookingList = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {booking?.createdAt}
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {booking?.jobBookingId}
                       </div>
                     </td>
 

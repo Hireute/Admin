@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import React from "react";
 import Shipment from "./Shipment/Shipment";
 import Dashboard from "./Dashboard/Dashboard";
 import FaqForm from "./Faq/Faq";

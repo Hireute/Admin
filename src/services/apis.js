@@ -38,66 +38,32 @@ export const shipmentendpoints = {
   ALL_UTE_LIST: BASE_URL + "/api/admin/get-all-ute-list",
   ALL_JOB_LIST: BASE_URL + "/api/admin/get-all-job-list",
   CHECK_TOKEN: BASE_URL + "/api/admin/check-token",
-
-
   ALL_BOOKING_UTE_LIST: BASE_URL + "/api/admin/ute-list",
   ALL_BOOKING_JOB_LIST: BASE_URL + "/api/admin/job-list",
-
   GET_BANK_INFO: BASE_URL + "/api/admin/get-account-detail",
-
-
-
   ALL_PAYMENT_LIST: BASE_URL + "/api/admin/payment-history",
-
   ALL_MANUAL_PAYMENT_LIST: BASE_URL + "/api/admin/get-update-manual-status",  
-
-  ACCEPT_MANUAL_PAYMENT: BASE_URL + "/api/admin/update-manual-status", // will have to change
-
-
-
+  ACCEPT_MANUAL_PAYMENT: BASE_URL + "/api/admin/update-manual-status",
   TRANSFER_AMOUNT: BASE_URL + "/api/admin/transfer-amount",
-
-
   MANUAL_TRANSFER_AMOUNT: BASE_URL + "/api/admin/transfer-manual-payment",
- 
-
-
-
-
-
   SUSPEND_USER: BASE_URL + "/api/admin/user-job-suspended",
   REVOKE_USER: BASE_URL + "/api/admin/user-job-approved",
-
   DELETE_USER: BASE_URL + "/api/admin/delete-user",
   DELETE_JOB: BASE_URL + "/api/admin/delete-job",
-
   DELETE_UTE: BASE_URL + "/api/admin/delete-ute",
-
   DELETE_QUERIES: BASE_URL + "/api/admin/delete-queries",
-
-
   APPROVE_REJECT_UTE: BASE_URL + "/api/admin/user-ute-status",
-
   CREATE_FAQ: BASE_URL + "/api/admin/create-faq",
-
   UPADTE_FAQ: BASE_URL + "/api/admin/get-all-job-list",
-
   ALL_FAQ: BASE_URL + "/api/admin/all-faq",
-
   ALL_QUERIES: BASE_URL + "/api/admin/all-queries",
   REPLY_QUERIES: BASE_URL + "/api/admin/reply-query",
-
   CREATE_BLOG: BASE_URL + "/api/admin/create-blog",
-
   UPADTE_BLOG: BASE_URL + "/api/admin/update-blog",
-
   ALL_BLOG: BASE_URL + "/api/admin/all-blogs",
-
   BLOG_DETAILS: BASE_URL + "/api/admin/blog-detaill",
-
   ALL_USER_LIST: BASE_URL + "/api/admin/all-users-data",
   ACTIVE_DEACTIVE: BASE_URL + "/api/admin/update-user-status",
-
   SINGLE_SHIPMENT_DETAIL: BASE_URL + "/api/admin/single-shipment-detail",
   SHIPMENT_DELIVERY_DETAIL: BASE_URL + "/api/admin/shipment-delivery-detail",
   DELETE_SHIPMENT: BASE_URL + "/api/admin/shipment-delete",
@@ -107,13 +73,9 @@ export const shipmentendpoints = {
 
 export const blogEndpoints = {
   CREATE_BLOG: BASE_URL + "/api/admin/create-blog",
-
   UPADTE_BLOG: BASE_URL + "/api/admin/update-blog",
-
   ALL_BLOG: BASE_URL + "/api/admin/all-blogs",
-
   BLOG_DETAILS: BASE_URL + "/api/admin/blog-detaill",
-
   DELETE_BLOG: BASE_URL + "/api/admin/delete-blog",
 };
 

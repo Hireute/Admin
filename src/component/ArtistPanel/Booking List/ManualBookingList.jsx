@@ -14,29 +14,10 @@ const ManualBookingList = ({ data, handleTransferAmount, handleDelete }) => {
 
   const [id, setId] = useState(null)
 
-
-
-  const getStatusColor = (status) => {
-    switch (status?.toLowerCase()) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'completed':
-      case 'delivered':
-        return 'bg-green-100 text-green-800';
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-blue-100 text-blue-800';
-    }
-  };
-
   const handleManualTransferClick = (booking) => {
     setSelectedBooking(booking);
 
-   
-
     setPaymentDetails({
-     
       amount: booking.amount
     });
     setId(booking?.uteBy)
@@ -45,13 +26,7 @@ const ManualBookingList = ({ data, handleTransferAmount, handleDelete }) => {
 
 
   const {mutate , isPending} = useTransferManualUteMutaion(setProcessingId)
-
-
  const { data: bankInfoData, isLoading } = useGetBankInfo({ id, showPaymentModal });
-
- 
-
-
 
   const handlePayNow = () => {
     mutate(selectedBooking?._id)
@@ -88,6 +63,7 @@ const ManualBookingList = ({ data, handleTransferAmount, handleDelete }) => {
                     "Status",
                     "Pickup Address",
                     "Drop Address",
+                    "Ute Booking ID",
                     "Is-Transfered",
                     "Actions",
                   ].map((heading, index) => (
@@ -137,6 +113,12 @@ const ManualBookingList = ({ data, handleTransferAmount, handleDelete }) => {
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate">
                       {`${booking?.dropAddress?.street}, ${booking?.dropAddress?.state} ${booking?.dropAddress?.postalCode}`}
+                    </td>
+
+                   <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate">
+                     
+                        {booking?.uteBookingId || "N/A"}
+                    
                     </td>
 
                     <td className="px-6 py-4 whitespace-nowrap">

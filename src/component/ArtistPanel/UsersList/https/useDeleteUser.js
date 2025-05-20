@@ -18,14 +18,11 @@ const useDeleteUser = () => {
     mutationFn: deleteUserMutation,
 
     onSuccess: async (res) => {
-     
+
       queryClient.invalidateQueries({
         queryKey: [shipmentendpoints.ALL_USER_LIST],
         refetchType: "all",
       });
-
-      
-
       toast.success(res.data.message);
     },
     onError: (error) => {

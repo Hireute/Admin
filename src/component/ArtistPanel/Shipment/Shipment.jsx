@@ -90,6 +90,7 @@ const ShipmentTable = () => {
                   "Image",
                   "Status",
                   "Created At",
+                  "UTE ID",
                   "Actions",
                 ].map((heading, index) => (
                   <th
@@ -105,9 +106,9 @@ const ShipmentTable = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {data?.data?.length > 0 ? (
-                data.data.map((faq) => (
+                data?.data?.map((faq) => (
                   <tr
-                    key={faq._id}
+                    key={faq?._id}
                     className="hover:bg-gray-50 transition-colors"
                   >
                     <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -115,9 +116,9 @@ const ShipmentTable = () => {
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate">
                       {faq?.description
-                        ? faq.description.length > 50
-                          ? `${faq.description.substring(0, 50)}...`
-                          : faq.description
+                        ? faq?.description?.length > 50
+                          ? `${faq?.description?.substring(0, 50)}...`
+                          : faq?.description
                         : "No description"}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
@@ -125,9 +126,9 @@ const ShipmentTable = () => {
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                       {faq?.licenceExpireDate
-                        ? faq.licenceExpireDate?.licenceExpireMonth +
+                        ? faq?.licenceExpireDate?.licenceExpireMonth +
                           "/" +
-                          faq.licenceExpireDate?.licenceExpireYear
+                          faq?.licenceExpireDate?.licenceExpireYear
                         : "N/A"}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
@@ -153,7 +154,7 @@ const ShipmentTable = () => {
                         {faq?.uteImages?.[0] ? (
                           <img
                             className="h-10 w-10 rounded-full object-cover"
-                            src={`${BASE_IMAGE_URL}/uteImages/${faq.uteImages[0]}`}
+                            src={`${BASE_IMAGE_URL}/uteImages/${faq?.uteImages[0]}`}
                             alt="UTE"
                           />
                         ) : (
@@ -178,6 +179,9 @@ const ShipmentTable = () => {
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                       {faq?.createdAt ? `${faq?.createdAt}` : "N/A"}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      {faq?.uteId ? `${faq?.uteId}` : "N/A"}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center space-x-2">

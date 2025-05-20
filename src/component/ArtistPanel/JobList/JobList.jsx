@@ -181,6 +181,7 @@ const JobList = () => {
                   "Created",
                   "Status",
                   // "Created At",
+                  "JOB ID",
                   "Actions"
                 ].map((heading, index) => (
                   <th
@@ -235,6 +236,10 @@ const JobList = () => {
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                       {formatDate(job?.createdAt)}
+                    </td>
+
+                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                      {job?.jobId}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <span

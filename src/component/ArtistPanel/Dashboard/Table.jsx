@@ -44,12 +44,12 @@ const Table = ({ shipmentData, currentPage, setCurrentPage, data }) => {
           <table className="w-full border-collapse border border-gray-300">
             <thead className="bg-black">
               <tr className="text-white">
-                {table_head.map((item, index) => (
+                {table_head?.map((item, index) => (
                   <th
                     key={index}
                     className="px-2 py-3 text-sm font-semibold text-left"
                   >
-                    {item.head}
+                    {item?.head}
                   </th>
                 ))}
               </tr>
@@ -59,25 +59,25 @@ const Table = ({ shipmentData, currentPage, setCurrentPage, data }) => {
                 <tr key={index} className="bg-white border-b border-[#C2C2C2]">
                   <td className="p-2">
                     <p className="w-48 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                      {user.shipmentId}
+                      {user?.shipmentId}
                     </p>
                   </td>
                   <td className="p-2">
-                    {user.quoteStatus === "half" ? (
+                    {user?.quoteStatus === "half" ? (
                       <p className="text-sm w-48 overflow-hidden text-ellipsis whitespace-wrap line-clamp-2">
                         Not Available
                       </p>
                     ) : (
                       user?.contactDetail?.map((detail) =>
-                        detail.collectionInfo ? (
-                          <div key={detail.collectionInfo.name}>
+                        detail?.collectionInfo ? (
+                          <div key={detail?.collectionInfo?.name}>
                             <Tooltip
-                              text={detail.collectionInfo.name}
+                              text={detail?.collectionInfo?.name}
                               position="top"
                             >
                               <p className="w-48 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                                {detail.collectionInfo.name
-                                  ? detail.collectionInfo.name
+                                {detail?.collectionInfo?.name
+                                  ? detail?.collectionInfo?.name
                                   : "Not Available"}
                               </p>
                             </Tooltip>
@@ -87,23 +87,23 @@ const Table = ({ shipmentData, currentPage, setCurrentPage, data }) => {
                     )}
                   </td>
                   <td className="p-2">
-                    {user.quoteStatus === "half" ? (
-                      <Tooltip text={user.email} position="top">
+                    {user?.quoteStatus === "half" ? (
+                      <Tooltip text={user?.email} position="top">
                         <p className="text-sm w-48 overflow-hidden  text-ellipsis whitespace-wrap line-clamp-2">
-                          {user.email}
+                          {user?.email}
                         </p>
                       </Tooltip>
                     ) : (
                       user?.contactDetail?.map((detail) =>
-                        detail.collectionInfo ? (
-                          <div key={detail.collectionInfo.email}>
+                        detail?.collectionInfo ? (
+                          <div key={detail?.collectionInfo?.email}>
                             <Tooltip
-                              text={detail.collectionInfo.email}
+                              text={detail?.collectionInfo?.email}
                               position="top"
                             >
                               <p className="w-48 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                                {detail.collectionInfo.email
-                                  ? detail.collectionInfo.email
+                                {detail?.collectionInfo?.email
+                                  ? detail?.collectionInfo?.email
                                   : "Not Available"}
                               </p>
                             </Tooltip>
@@ -119,15 +119,15 @@ const Table = ({ shipmentData, currentPage, setCurrentPage, data }) => {
                       </p>
                     ) : (
                       user?.contactDetail?.map((detail) =>
-                        detail.collectionInfo ? (
-                          <div key={detail.collectionInfo.contactNumber}>
+                        detail?.collectionInfo ? (
+                          <div key={detail?.collectionInfo?.contactNumber}>
                             <Tooltip
-                              text={detail.collectionInfo.contactNumber}
+                              text={detail?.collectionInfo?.contactNumber}
                               position="top"
                             >
                               <p className="w-48 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                                {detail.collectionInfo.contactNumber
-                                  ? detail.collectionInfo.contactNumber
+                                {detail?.collectionInfo?.contactNumber
+                                  ? detail?.collectionInfo?.contactNumber
                                   : "Not Available"}
                               </p>
                             </Tooltip>
@@ -137,39 +137,39 @@ const Table = ({ shipmentData, currentPage, setCurrentPage, data }) => {
                     )}
                   </td>
                   <td className="p-2">
-                    <Tooltip text={`${user.orderDate}`} position="top">
+                    <Tooltip text={`${user?.orderDate}`} position="top">
                       <p className="w-48 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                        {`${user.orderDate}`}
+                        {`${user?.orderDate}`}
                       </p>
                     </Tooltip>
                   </td>
                   <td className="p-2">
-                    <Tooltip text={user.vehicleType} position="top">
+                    <Tooltip text={user?.vehicleType} position="top">
                       <p className="w-48 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                        {user.vehicleType}
+                        {user?.vehicleType}
                       </p>
                     </Tooltip>
                   </td>
                   <td className="p-2">
-                    {user.quoteStatus === "half" ? (
-                      <Tooltip text={user.collectionAddress} position="top">
+                    {user?.quoteStatus === "half" ? (
+                      <Tooltip text={user?.collectionAddress} position="top">
                         <p className="w-48 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                          {user.collectionAddress
-                            ? user.collectionAddress
+                          {user?.collectionAddress
+                            ? user?.collectionAddress
                             : "Not Available"}
                         </p>
                       </Tooltip>
                     ) : (
                       user?.contactDetail?.map((detail) =>
-                        detail.collectionInfo ? (
+                        detail?.collectionInfo ? (
                           <Tooltip
-                            key={detail.collectionInfo.collectionAddress}
-                            text={detail.collectionInfo.collectionAddress}
+                            key={detail?.collectionInfo?.collectionAddress}
+                            text={detail?.collectionInfo?.collectionAddress}
                             position="top"
                           >
                             <p className="w-48 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                              {detail.collectionInfo.collectionAddress
-                                ? detail.collectionInfo.collectionAddress
+                              {detail?.collectionInfo?.collectionAddress
+                                ? detail?.collectionInfo?.collectionAddress
                                 : "Not Available"}
                             </p>
                           </Tooltip>
@@ -178,32 +178,32 @@ const Table = ({ shipmentData, currentPage, setCurrentPage, data }) => {
                     )}
                   </td>
                   <td className="p-2">
-                    <Tooltip text={`${user.pickUpDateAndTime}`} position="top">
+                    <Tooltip text={`${user?.pickUpDateAndTime}`} position="top">
                       <p className="w-40 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
                         {`${
-                          user.pickUpDateAndTime
-                            ? user.pickUpDateAndTime
+                          user?.pickUpDateAndTime
+                            ? user?.pickUpDateAndTime
                             : "Not Available"
                         }`}
                       </p>
                     </Tooltip>
                   </td>
                   <td className="p-2">
-                    {user.quoteStatus === "half" ? (
+                    {user?.quoteStatus === "half" ? (
                       <p className="text-sm">
-                        <p className="text-sm">{user.deliveryAddress}</p>
+                        <p className="text-sm">{user?.deliveryAddress}</p>
                       </p>
                     ) : (
                       user?.contactDetail?.map((detail) =>
-                        detail.deliveryInfo ? (
+                        detail?.deliveryInfo ? (
                           <Tooltip
-                            key={detail.deliveryInfo.deliveryAddress}
-                            text={detail.deliveryInfo.deliveryAddress}
+                            key={detail?.deliveryInfo?.deliveryAddress}
+                            text={detail?.deliveryInfo?.deliveryAddress}
                             position="top"
                           >
                             <p className="w-48 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                              {detail.deliveryInfo.deliveryAddress
-                                ? detail.deliveryInfo.deliveryAddress
+                              {detail?.deliveryInfo?.deliveryAddress
+                                ? detail?.deliveryInfo?.deliveryAddress
                                 : "Not Available"}
                             </p>
                           </Tooltip>
@@ -217,7 +217,7 @@ const Table = ({ shipmentData, currentPage, setCurrentPage, data }) => {
                         <OpenModalButton size={20} user={user} />
                       </button>
 
-                      <button onClick={() => handleOpenDeleteModal(user._id)}>
+                      <button onClick={() => handleOpenDeleteModal(user?._id)}>
                         <AiFillDelete size={20} color="#BFA75D" />
                       </button>
                       {isDeleteModalOpen && (

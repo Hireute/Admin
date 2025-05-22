@@ -12,6 +12,7 @@ import PaymenetHistory from "./PaymentHistory/PaymenetHistory";
 import ChangePassword from "./ChangePassword/ChangePassword";
 import Queries from "./Queries/Queries";
 import JobBookingLIst from "./Booking List/JobBookingLIst";
+import ActivityLog from "./UsersList/ActivityLog";
 
 const ArtistPanel = () => {
   return (
@@ -26,15 +27,14 @@ const ArtistPanel = () => {
           <Route path="job-list" element={<JobList />} />
           <Route path="booking-list" element={<BookinList />} />
           <Route path="job-booking-list" element={<JobBookingLIst />} />
-
-          <Route path="quotes" element={<Request />} />
+          <Route path="quotes" element={<Request />} /> 
           <Route path="faq" element={<FaqForm />} />
           <Route path="blogs" element={<BlogPost />} />
           <Route path="payment-history" element={<PaymenetHistory />} />
           <Route path="queries" element={<Queries />} />
-
           <Route path="change-password" element={<ChangePassword />} />
           <Route path="all-users" element={<UsersList />} />
+          <Route path="users-activity/:id" element={<ActivityLog/>} />
         </Routes>
       </div>
     </div>

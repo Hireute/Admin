@@ -3,18 +3,16 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import logo from "../../assets/logo1.png";
 import { AiOutlineDashboard } from "react-icons/ai";
-import { GrDeliver } from "react-icons/gr";
+
 import LogoutModal from "../utils/LogoutModal";
-import { LuMessageSquareQuote } from "react-icons/lu";
-import { LuNotebookPen } from "react-icons/lu";
+
 import { RiBloggerLine } from "react-icons/ri";
 import { HiMiniArrowLeftStartOnRectangle } from "react-icons/hi2";
 import { useDispatch } from "react-redux";
 import { setIsAuthorized, setToken } from "../../store/userSlice/userSlice";
 import { FaRegUser } from "react-icons/fa";
 import { FiTruck } from "react-icons/fi";
-import { FaTruck } from "react-icons/fa";
-import { FaQuestion } from "react-icons/fa";
+
 import { RiLockPasswordLine } from "react-icons/ri";
 import { FaQuora } from "react-icons/fa";
 import { BsCardChecklist } from "react-icons/bs";
@@ -83,7 +81,6 @@ export const sections = [
     label: "blogs",
     path: "blogs",
   },
-
   {
     key: "faq",
     icon: <FaQuora size={28} />,
@@ -153,7 +150,7 @@ const SideBar = () => {
             />
           </div>
 
-          <div className="flex relative flex-col justify-between h-auto mt-12">
+          <div className="flex relative flex-col justify-between min-h-full overflow-y-auto lg:pb-0  pb-20">
             <ul>
               {sections.map((section) => (
                 <li key={section.key}>

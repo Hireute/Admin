@@ -201,13 +201,13 @@ const ShipmentTable = () => {
                           disabled={
                             faq?.status === "Approved" ||
                             (isPending &&
-                              pendingAction?.id === faq._id &&
+                              pendingAction?.id === faq?._id &&
                               pendingAction?.status === "Approved")
                           }
                           title="Approve"
                         >
                           {isPending &&
-                          pendingAction?.id === faq._id &&
+                          pendingAction?.id === faq?._id &&
                           pendingAction?.status === "Approved"
                             ? "Processing"
                             : "Approve"}
@@ -215,27 +215,25 @@ const ShipmentTable = () => {
                       
                         <button
                           onClick={() =>
-                            handleStatusChange(faq._id, "Rejected")
+                            handleStatusChange(faq?._id, "Rejected")
                           }
                           className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded disabled:opacity-50 transition-colors"
                           disabled={
                             faq?.status === "Rejected" ||
                             (isPending &&
-                              pendingAction?.id === faq._id &&
+                              pendingAction?.id === faq?._id &&
                               pendingAction?.status === "Rejected")
                           }
                           title="Reject"
                         >
                           {isPending &&
-                          pendingAction?.id === faq._id &&
+                          pendingAction?.id === faq?._id &&
                           pendingAction?.status === "Rejected"
                             ? "Processing"
                             : "Reject"}
                         </button>
-                        {/* )} */}
-
                         <button
-                          onClick={() => handleDeleteFaq(faq._id)}
+                          onClick={() => handleDeleteFaq(faq?._id)}
                           className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50 transition-colors"
                           title="Delete"
                         >
@@ -419,7 +417,7 @@ const ShipmentTable = () => {
                     <p className="mt-1 text-sm text-gray-900">
                       {viewingFaq?.licenceExpireDate
                         ? new Date(
-                            viewingFaq.licenceExpireDate
+                            viewingFaq?.licenceExpireDate
                           ).toLocaleDateString()
                         : "N/A"}
                     </p>
@@ -500,7 +498,7 @@ const ShipmentTable = () => {
                 </h3>
                 <div className="flex flex-wrap gap-4">
                   {viewingFaq?.uteImages?.length > 0 ? (
-                    viewingFaq.uteImages.map((image, index) => (
+                    viewingFaq?.uteImages?.map((image, index) => (
                       <div
                         key={index}
                         className="w-32 h-32 rounded-md overflow-hidden border border-gray-200"

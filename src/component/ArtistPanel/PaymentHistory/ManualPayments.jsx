@@ -41,7 +41,7 @@ const ManualPayments = ({
 
   return (
     <>
-      {/* Tabs */}
+      
       <div className="mb-4 flex space-x-4">
         <button
           onClick={() => setActiveTab("ute")}
@@ -93,7 +93,7 @@ const ManualPayments = ({
         </div>
       )}
 
-      {/* Table */}
+      
       {renderData?.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg shadow">
           <p className="text-gray-500">No {activeTab} payment records found</p>
@@ -162,7 +162,7 @@ const ManualPayments = ({
                     <td className="px-6 py-4 whitespace-nowrap">
                       {payment?.paymentImage ? (
                         <button 
-                          onClick={() => handleReceiptClick(payment.paymentImage)}
+                          onClick={() => handleReceiptClick(payment?.paymentImage)}
                           className="text-[#7F0284] hover:text-[#5a025e] focus:outline-none"
                         >
                           <FaFileInvoice className="text-xl" />

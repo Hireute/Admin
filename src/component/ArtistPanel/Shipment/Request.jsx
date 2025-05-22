@@ -173,7 +173,7 @@ const Request = () => {
                         key={index}
                         className="px-4 py-4 text-sm font-semibold text-center"
                       >
-                        {item.head}
+                        {item?.head}
                       </th>
                     ))}
                   </tr>
@@ -185,28 +185,28 @@ const Request = () => {
                       className="border-t border-gray-300 hover:bg-gray-50"
                     >
                       <td className="px-4 py-4 text-[#12223D] font-normal">
-                        <Tooltip text={request.shipmentId} position="top">
+                        <Tooltip text={request?.shipmentId} position="top">
                           <p className="w-20 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                            {request.shipmentId}
+                            {request?.shipmentId}
                           </p>
                         </Tooltip>
                       </td>
                       <td className="px-4 py-4 text-[#12223D] font-normal">
-                        {request.quoteStatus === "half" ? (
+                        {request?.quoteStatus === "half" ? (
                           <p className="w-40 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                            {request.email}
+                            {request?.email}
                           </p>
                         ) : (
                           request?.contactDetail?.map((detail) =>
-                            detail.collectionInfo ? (
-                              <div key={detail.collectionInfo.email}>
+                            detail?.collectionInfo ? (
+                              <div key={detail?.collectionInfo?.email}>
                                 <Tooltip
-                                  text={detail.collectionInfo.email}
+                                  text={detail?.collectionInfo?.email}
                                   position="top"
                                 >
                                   <p className="w-56 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                                    {detail.collectionInfo.email
-                                      ? detail.collectionInfo.email
+                                    {detail?.collectionInfo?.email
+                                      ? detail?.collectionInfo?.email
                                       : "Not Available"}
                                   </p>
                                 </Tooltip>
@@ -216,47 +216,47 @@ const Request = () => {
                         )}
                       </td>
                       <td className="px-4 py-4 text-[#12223D] font-normal">
-                        <Tooltip text={request.vehicleType} position="top">
+                        <Tooltip text={request?.vehicleType} position="top">
                           <p className="w-24 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                            {request.vehicleType}
+                            {request?.vehicleType}
                           </p>
                         </Tooltip>
                       </td>
                       <td className="px-4 py-4">
-                        <Tooltip text={request.orderDate} position="top">
+                        <Tooltip text={request?.orderDate} position="top">
                           <p className="w-32 text-sm text-ellipsis whitespace-nowrap">
-                            {request.orderDate}
+                            {request?.orderDate}
                           </p>
                         </Tooltip>
                       </td>
                       <td className="px-4 py-4">
                         <Tooltip
-                          text={request.pickUpDateAndTime}
+                          text={request?.pickUpDateAndTime}
                           position="top"
                         >
                           <p className="w-32 text-sm text-ellipsis whitespace-nowrap">
-                            {request.pickUpDateAndTime}
+                            {request?.pickUpDateAndTime}
                           </p>
                         </Tooltip>
                       </td>
                       <td className="px-4 py-4 text-center">
-                        {request.quoteStatus === "half" ? (
+                        {request?.quoteStatus === "half" ? (
                           <p className="w-40 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                            {request.collectionAddress}
+                            {request?.collectionAddress}
                           </p>
                         ) : (
                           request?.contactDetail?.map((detail) =>
-                            detail.collectionInfo ? (
+                            detail?.collectionInfo ? (
                               <div
-                                key={detail.collectionInfo.collectionAddress}
+                                key={detail?.collectionInfo?.collectionAddress}
                               >
                                 <Tooltip
-                                  text={detail.collectionAddress}
+                                  text={detail?.collectionAddress}
                                   position="top"
                                 >
                                   <p className="w-56 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                                    {detail.collectionInfo.collectionAddress
-                                      ? detail.collectionInfo.collectionAddress
+                                    {detail?.collectionInfo?.collectionAddress
+                                      ? detail?.collectionInfo?.collectionAddress
                                       : "Not Available"}
                                   </p>
                                 </Tooltip>
@@ -266,21 +266,21 @@ const Request = () => {
                         )}
                       </td>
                       <td className="px-4 py-4 text-center">
-                        {request.quoteStatus === "half" ? (
+                        {request?.quoteStatus === "half" ? (
                           <p className="w-40 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                            {request.deliveryAddress}
+                            {request?.deliveryAddress}
                           </p>
                         ) : (
                           request?.contactDetail?.map((detail) =>
-                            detail.deliveryInfo ? (
-                              <div key={detail.deliveryInfo.deliveryAddress}>
+                            detail?.deliveryInfo ? (
+                              <div key={detail?.deliveryInfo?.deliveryAddress}>
                                 <Tooltip
-                                  text={detail.deliveryAddress}
+                                  text={detail?.deliveryAddress}
                                   position="top"
                                 >
                                   <p className="w-56 overflow-hidden text-sm text-ellipsis whitespace-wrap line-clamp-2">
-                                    {detail.deliveryInfo.deliveryAddress
-                                      ? detail.deliveryInfo.deliveryAddress
+                                    {detail?.deliveryInfo?.deliveryAddress
+                                      ? detail?.deliveryInfo?.deliveryAddress
                                       : "Not Available"}
                                   </p>
                                 </Tooltip>
@@ -299,7 +299,7 @@ const Request = () => {
                       <td className="px-1 py-2 flex gap-2 mt-3">
                         <button
                           className=" bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition duration-200"
-                          onClick={() => handleAcceptQuote(request._id)}
+                          onClick={() => handleAcceptQuote(request?._id)}
                           style={{ padding: "5px 14px" }}
                         >
                           Accept
@@ -307,7 +307,7 @@ const Request = () => {
                         <button
                           className=" bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition duration-200"
                           onClick={() => {
-                            setQuoteIdToReject(request._id);
+                            setQuoteIdToReject(request?._id);
                             setShowConfirmModal(true);
                           }}
                           style={{ padding: "5px 14px" }}
@@ -317,7 +317,7 @@ const Request = () => {
                         <button
                           className=" bg-[#BFA75D] text-white text-sm rounded-md hover:bg-[#BFA75D] transition duration-200 "
                           style={{ padding: "5px 14px", width: "100px" }}
-                          onClick={() => openModal(request._id, request.email)}
+                          onClick={() => openModal(request?._id, request?.email)}
                         >
                           Send Price
                         </button>

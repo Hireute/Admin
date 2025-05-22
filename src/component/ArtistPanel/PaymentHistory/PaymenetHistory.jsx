@@ -129,7 +129,7 @@ const PaymentHistory = () => {
         </div>
       </div>
 
-      {/* Tabs */}
+      
       <div className="border-b border-gray-200 mb-6">
         <nav className="-mb-px flex space-x-8">
           <button
@@ -164,7 +164,7 @@ const PaymentHistory = () => {
         />
       ) : (
         <>
-          {paymentData?.data.length === 0 ? (
+          {paymentData?.data?.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-lg shadow">
               <p className="text-gray-500">
                 No {activeTab} payment records found
@@ -211,7 +211,7 @@ const PaymentHistory = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-                              payment.status
+                              payment?.status
                             )}`}
                           >
                             {payment?.status}

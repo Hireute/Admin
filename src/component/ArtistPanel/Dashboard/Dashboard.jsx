@@ -13,7 +13,7 @@ const Dashboard = () => {
   if (isError) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-        <p className="text-red-600">Error loading dashboard data: {error.message}</p>
+        <p className="text-red-600">Error loading dashboard data: {error?.message}</p>
       </div>
     );
   }
@@ -85,7 +85,7 @@ const Dashboard = () => {
             className="group transform transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
           >
             <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-              <div className={`p-4 ${stat.bgColor} flex justify-between items-center`}>
+              <div className={`p-4 ${stat?.bgColor} flex justify-between items-center`}>
                 <div className="p-3 rounded-lg bg-white bg-opacity-20">
                   {stat?.icon}
                 </div>

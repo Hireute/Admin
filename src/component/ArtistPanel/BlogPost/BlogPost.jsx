@@ -85,16 +85,16 @@ const BlogPost = () => {
 
   const handleEditBlog = (id) => {
     setModalEditOpen(true);
-    const blog = data?.find((blog) => blog._id === id);
+    const blog = data?.find((blog) => blog?._id === id);
 
     if (blog) {
-      setNewTitle(blog.title);
-      setNewDescription(blog.description);
-      setNewImage(blog.image);
-      setNewUser(blog.user);
-      setNewViews(blog.views);
-      setNewComments(blog.comments);
-      setEditingId(blog._id);
+      setNewTitle(blog?.title);
+      setNewDescription(blog?.description);
+      setNewImage(blog?.image);
+      setNewUser(blog?.user);
+      setNewViews(blog?.views);
+      setNewComments(blog?.comments);
+      setEditingId(blog?._id);
       
     }
   };
@@ -155,17 +155,17 @@ const BlogPost = () => {
           </thead>
           <tbody>
             {data?.map((blog) => (
-              <tr key={blog.id} className="border-t border-gray-300">
+              <tr key={blog?.id} className="border-t border-gray-300">
                 <td className="p-2">{blog?.title}</td>
                 <td className="p-2 hidden sm:table-cell">
                   {blog?.description
-                    ? blog.description.split(" ").slice(0, 25).join(" ") +
-                      (blog.description.split(" ").length > 25 ? "..." : "")
+                    ? blog?.description?.split(" ").slice(0, 25).join(" ") +
+                      (blog?.description?.split(" ").length > 25 ? "..." : "")
                     : "No description"}
                 </td>
                 <td className="p-2 hidden md:table-cell">
                   {blog?.createdAt
-                    ? new Date(blog.createdAt).toLocaleDateString("en-US", {
+                    ? new Date(blog?.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
@@ -175,7 +175,7 @@ const BlogPost = () => {
                 <td className="p-2 hidden lg:table-cell">{blog?.views}</td>
                 <td className="p-2">
                   <img
-                    src={`${BASE_IMAGE_URL}/blogImg/${blog.blogImg[0]}`}
+                    src={`${BASE_IMAGE_URL}/blogImg/${blog?.blogImg[0]}`}
                     alt="Blog"
                     className="w-10 h-10 md:w-16 md:h-16 object-cover rounded"
                   />

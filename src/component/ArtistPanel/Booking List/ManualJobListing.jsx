@@ -43,7 +43,7 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
     setSelectedBooking(booking);
     setPaymentDetails({
       ...paymentDetails,
-      amount: booking.amount,
+      amount: booking?.amount,
     });
     
     setId(booking?.uteBy);
@@ -68,6 +68,8 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
+
+
               <thead className="bg-[#7F0284] text-white">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
@@ -99,6 +101,7 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
                   </th>
                 </tr>
               </thead>
+
               <tbody className="bg-white divide-y divide-gray-200">
                 {data &&  data?.map((booking) => (
                   <tr key={booking?._id}>
@@ -162,7 +165,7 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
                           }
                           onClick={() => handleManualTransferClick(booking)}
                         >
-                          {processingId === booking._id ? (
+                          {processingId === booking?._id ? (
                             <div
                               className={`flex items-center ${
                                 isPending ? "cursor-not-allowed" : ""
@@ -205,6 +208,8 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
                   </tr>
                 ))}
               </tbody>
+
+
             </table>
           </div>
         </div>
@@ -213,6 +218,7 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
       {showPaymentModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-[#7F0284]">
                 Manual Payment

@@ -1,21 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGetAllUserList } from "./https/useGetAllUserList";
 import useActiveMutation from "./https/useActiveMutation";
 import Loader from "../../utils/Loader";
-import { AiFillDelete, AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import { AiFillDelete, AiOutlineEye, AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import useDeleteUser from "./https/useDeleteUser";
+import { useNavigate } from "react-router-dom";
+
 
 const UsersList = () => {
   const [pendingId, setPendingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
+ 
+  const navigate = useNavigate()
 
   const { data, isLoading } = useGetAllUserList({
     page: currentPage,
     limit,
-    search: searchTerm,
+    search: debouncedSearchTerm,
   });
+  
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setCurrentPage(1); 
+    }, 500); 
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [searchTerm]);
 
   const { mutateAsync, isPending } = useActiveMutation();
   const { mutate: deleteUser } = useDeleteUser();
@@ -51,12 +67,17 @@ const UsersList = () => {
     }
   };
 
+  const handleActivity = (id)=>{
+    navigate(`/users-activity/${id}` )
+  }
+
   if (isLoading) {
     return <Loader />;
   }
 
   return (
     <div className="w-full p-6 rounded-lg">
+
       <div className="flex gap-6 justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Users List</h1>
         <div className="flex gap-4 items-center">
@@ -94,6 +115,9 @@ const UsersList = () => {
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                  Activity
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -116,6 +140,11 @@ const UsersList = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {formatDate(item?.createdAt)}
+                    </td>
+                     <td  
+                     onClick={()=>handleActivity(item?._id)}
+                     className="px-6 py-4 whitespace-nowrap cursor-pointer">
+                      <AiOutlineEye/>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -252,6 +281,7 @@ const UsersList = () => {
           </div>
         )}
       </div>
+
       <div className="flex justify-between items-center mt-6 px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
         <div className="text-sm text-gray-600">
           Showing{" "}
@@ -269,6 +299,7 @@ const UsersList = () => {
           entries
         </div>
       </div>
+
     </div>
   );
 };

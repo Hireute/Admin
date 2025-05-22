@@ -167,7 +167,7 @@ const BookinList = () => {
                             aria-disabled={booking?.status !== "delivered"}
                             onClick={() => handleTransferAmount(booking)}
                           >
-                            {processingId === booking._id ? (
+                            {processingId === booking?._id ? (
                               <div className={`flex items-center ${isPending ? "cursor-not-allowed" : ""}`}>
                                 <svg
                                   className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"

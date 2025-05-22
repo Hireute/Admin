@@ -200,7 +200,7 @@ const JobList = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredData?.length > 0 ? (
                 filteredData.map((job) => (
-                  <tr key={job._id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={job?._id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 max-w-xs truncate">
                       {job?.title || "N/A"}
                     </td>
@@ -288,10 +288,9 @@ const JobList = () => {
                               "Reject"
                             )}
                           </button>
-                        {/* )} */}
-                        
+
                         <button
-                          onClick={() => handleDeleteJob(job._id)}
+                          onClick={() => handleDeleteJob(job?._id)}
                           className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-50 transition-colors"
                           title="Delete"
                         >

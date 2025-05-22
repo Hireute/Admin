@@ -44,11 +44,11 @@ const ChangePassword = () => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-4">Change Password</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Current Password */}
+          
           <div className="mb-4 relative">
             <label className="block text-gray-700 mb-1">Current Password</label>
             <input
-              type={showPassword.current ? "text" : "password"}
+              type={showPassword?.current ? "text" : "password"}
               className="w-full p-2 border rounded pr-10"
               {...register("oldPassword", {
                 required: "Current password is required",
@@ -58,11 +58,11 @@ const ChangePassword = () => {
               className="absolute right-3 top-9 cursor-pointer text-gray-500"
               onClick={() => togglePassword("current")}
             >
-              {showPassword.current ? <FaEyeSlash /> : <FaEye />}
+              {showPassword?.current ? <FaEyeSlash /> : <FaEye />}
             </span>
-            {errors.currentPassword && (
+            {errors?.currentPassword && (
               <p className="text-red-500 text-sm">
-                {errors.currentPassword.message}
+                {errors?.currentPassword?.message}
               </p>
             )}
           </div>
@@ -70,7 +70,7 @@ const ChangePassword = () => {
           <div className="mb-4 relative">
             <label className="block text-gray-700 mb-1">New Password</label>
             <input
-              type={showPassword.new ? "text" : "password"}
+              type={showPassword?.new ? "text" : "password"}
               className="w-full p-2 border rounded pr-10"
               {...register("newPassword", {
                 required: "New password is required",
@@ -84,11 +84,11 @@ const ChangePassword = () => {
               className="absolute right-3 top-9 cursor-pointer text-gray-500"
               onClick={() => togglePassword("new")}
             >
-              {showPassword.new ? <FaEyeSlash /> : <FaEye />}
+              {showPassword?.new ? <FaEyeSlash /> : <FaEye />}
             </span>
-            {errors.newPassword && (
+            {errors?.newPassword && (
               <p className="text-red-500 text-sm">
-                {errors.newPassword.message}
+                {errors?.newPassword?.message}
               </p>
             )}
           </div>
@@ -96,7 +96,7 @@ const ChangePassword = () => {
           <div className="mb-4 relative">
             <label className="block text-gray-700 mb-1">Confirm Password</label>
             <input
-              type={showPassword.confirm ? "text" : "password"}
+              type={showPassword?.confirm ? "text" : "password"}
               className="w-full p-2 border rounded pr-10"
               {...register("confirmPassword", {
                 required: "Confirm password is required",
@@ -108,11 +108,11 @@ const ChangePassword = () => {
               className="absolute right-3 top-9 cursor-pointer text-gray-500"
               onClick={() => togglePassword("confirm")}
             >
-              {showPassword.confirm ? <FaEyeSlash /> : <FaEye />}
+              {showPassword?.confirm ? <FaEyeSlash /> : <FaEye />}
             </span>
-            {errors.confirmPassword && (
+            {errors?.confirmPassword && (
               <p className="text-red-500 text-sm">
-                {errors.confirmPassword.message}
+                {errors?.confirmPassword?.message}
               </p>
             )}
           </div>

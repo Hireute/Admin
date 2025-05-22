@@ -140,12 +140,15 @@ const JobBookingList = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-[#7F0284] text-white">
                 <tr>
+                  
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Job Name
                   </th>
+
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Ute Owner
                   </th>
+
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Ute Name
                   </th>
@@ -153,6 +156,7 @@ const JobBookingList = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Amount
                   </th>
+
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Status
                   </th>
@@ -161,10 +165,10 @@ const JobBookingList = () => {
                     Created At
                   </th>
 
-
-<th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Job Booking ID
-                  </th>
+                   </th>
+
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Is-Transfered
                   </th>
@@ -172,6 +176,7 @@ const JobBookingList = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Actions
                   </th>
+
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -196,11 +201,7 @@ const JobBookingList = () => {
                       <div className="text-sm text-gray-900">
                         ${booking?.amount}
                       </div>
-                      {/* {booking?.actualAmount !== booking?.amount && (
-                        <div className="text-xs text-gray-500">
-                          Actual: ${booking?.actualAmount}
-                        </div>
-                      )} */}
+                      
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -241,7 +242,7 @@ const JobBookingList = () => {
                           aria-disabled={booking?.status !== "delivered" || booking?.isTransfered === true}
                           onClick={() => handleTransferAmount(booking)}
                         >
-                          {processingId === booking._id ? (
+                          {processingId === booking?._id ? (
                             <div className={`flex items-center ${isPending ? "cursor-not-allowed" :""}`}>
                               <svg
                                 className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"

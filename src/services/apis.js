@@ -69,6 +69,9 @@ export const shipmentendpoints = {
   DELETE_SHIPMENT: BASE_URL + "/api/admin/shipment-delete",
   UPDATE_SHIPMENT_STOP: BASE_URL + "/api/admin/shipment-detail-update",
   SHIPMENT_DELEVERY_DETAIL: BASE_URL + "/api/admin/shipment-delivery-detail",
+
+  USER_ACTIVITY: BASE_URL + "/api/admin/get-activities",
+
 };
 
 export const blogEndpoints = {

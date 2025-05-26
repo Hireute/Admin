@@ -217,7 +217,7 @@ const ShipmentTable = () => {
                           onClick={() =>
                             handleStatusChange(faq?._id, "Rejected")
                           }
-                          className="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded disabled:opacity-50 transition-colors"
+                          className={`bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded disabled:opacity-50 transition-colors ${isPending  ? "pointer-events-none" : ""}`}
                           disabled={
                             faq?.status === "Rejected" ||
                             (isPending &&

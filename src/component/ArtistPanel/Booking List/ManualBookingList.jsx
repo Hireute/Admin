@@ -164,10 +164,10 @@ const ManualBookingList = ({ data, handleTransferAmount, handleDelete }) => {
                           "Transfer"
                         )}
                       </button>
-                      <AiFillDelete
+                      {/* <AiFillDelete
                         onClick={() => handleDeleteBooking(booking?._id)}
                         className="text-red-600 text-2xl cursor-pointer"
-                      />
+                      /> */}
                     </td>
                   </tr>
                 ))}

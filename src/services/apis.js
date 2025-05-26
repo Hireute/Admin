@@ -72,6 +72,9 @@ export const shipmentendpoints = {
 
   USER_ACTIVITY: BASE_URL + "/api/admin/get-activities",
 
+  DELETE_JOB_BOOKING: BASE_URL + "/api/admin/delete-job-booking",
+
+
 };
 
 export const blogEndpoints = {

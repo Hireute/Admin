@@ -197,12 +197,12 @@ const ManualJobListing = ({ data, handleTransferAmount, handleDelete }) => {
                             "Transfer"
                           )}
                         </button>
-                        <button
+                        {/* <button
                           onClick={() => handleDelete(booking?._id)}
                           className="text-red-600 hover:text-red-900"
                         >
                           <AiFillDelete className="h-5 w-5" />
-                        </button>
+                        </button> */}
                       </div>
                     </td>
                   </tr>

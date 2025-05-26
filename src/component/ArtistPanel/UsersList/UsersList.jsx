@@ -141,11 +141,7 @@ const UsersList = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {formatDate(item?.createdAt)}
                     </td>
-                     <td  
-                     onClick={()=>handleActivity(item?._id)}
-                     className="px-6 py-4 whitespace-nowrap cursor-pointer">
-                      <AiOutlineEye/>
-                    </td>
+                    
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={
@@ -154,6 +150,11 @@ const UsersList = () => {
                       >
                         {item?.isActive ? "Active" : "Inactive"}
                       </span>
+                    </td>
+                     <td  
+                     onClick={()=>handleActivity(item?._id)}
+                     className="px-6 py-4 whitespace-nowrap cursor-pointer">
+                      <AiOutlineEye/>
                     </td>
                     <td className="p-2 flex justify-center gap-2 items-center">
                       <button

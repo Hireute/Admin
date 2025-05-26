@@ -3,6 +3,7 @@ import { AiFillDelete, AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useGetJobList } from "./https/useGetJobList";
 import { useTransferMutation } from "./https/useTransferMutation";
 import ManualJobListing from "./ManualJobListing";
+import { useDeleteJobBookingMutation } from "./https/useDeleteJobBookingMutation";
 
 const JobBookingList = () => {
   const { data, isLoading } = useGetJobList();
@@ -13,6 +14,9 @@ const JobBookingList = () => {
   const manualBookings = data?.data?.filter(item => item.transactionId) || [];
   
   const stripeBookings = data?.data?.filter(item => !item.transactionId) || [];
+
+
+  const {mutateAsync:deleteJob } = useDeleteJobBookingMutation()
 
   const handleTransferAmount = (data) => {
     setProcessingId(data?._id);
@@ -68,11 +72,8 @@ const JobBookingList = () => {
   });
 
   const handleDelete = (id) => {
-    setBookings((prev) => ({
-      ...prev,
-      data: prev.data.filter((booking) => booking._id !== id),
-      totalCount: prev.totalCount - 1,
-    }));
+    console.log("hello")
+    deleteJob(id)
   };
 
   const getStatusColor = (status) => {
@@ -140,7 +141,7 @@ const JobBookingList = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-[#7F0284] text-white">
                 <tr>
-                  
+
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Job Name
                   </th>
@@ -271,12 +272,7 @@ const JobBookingList = () => {
                           )}
 
                         </button>
-                        <button
-                          onClick={() => handleDelete(booking?._id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          <AiFillDelete className="h-5 w-5" />
-                        </button>
+                       
                       </div>
                     </td>
                   </tr>

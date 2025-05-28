@@ -9,7 +9,7 @@ import ManualPayments from "./ManualPayments";
 import { useGetManualPayments } from "./https/useGetManualPayments";
 
 const PaymentHistory = () => {
-  const { data: paymentData, isLoading } = useGetPaymentHistory();
+  
   const { data: manualPaymentData, isLoading: manualLoading } =
     useGetManualPayments();
   const [activeTab, setActiveTab] = useState("stripe");
@@ -18,6 +18,9 @@ const PaymentHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const paymentsPerPage = 10;
   const itemsPerPage = 10;
+
+
+  const { data: paymentData, isLoading } = useGetPaymentHistory(searchTerm);
 
   const processedPayments =
     paymentData?.data

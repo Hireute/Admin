@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AiFillEye,
   AiFillDelete,
@@ -16,12 +16,26 @@ const ShipmentTable = () => {
   const [viewingFaq, setViewingFaq] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pendingAction, setPendingAction] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const itemsPerPage = 10;
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 700);
+
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
 
   const { data, isLoading } = useGetAllUteList({
     page: currentPage,
     limit: itemsPerPage,
+    search: debouncedSearch,
   });
+
+  console.log(searchTerm);
 
   const totalPages = Math.ceil((data?.totalCount || 0) / itemsPerPage);
 
@@ -69,6 +83,14 @@ const ShipmentTable = () => {
         <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 sm:mb-0">
           UTE Management
         </h1>
+
+        <input
+          type="text"
+          placeholder="Search by UTE name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full sm:w-64 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+        />
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -212,12 +234,14 @@ const ShipmentTable = () => {
                             ? "Processing"
                             : "Approve"}
                         </button>
-                      
+
                         <button
                           onClick={() =>
                             handleStatusChange(faq?._id, "Rejected")
                           }
-                          className={`bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded disabled:opacity-50 transition-colors ${isPending  ? "pointer-events-none" : ""}`}
+                          className={`bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded disabled:opacity-50 transition-colors ${
+                            isPending ? "pointer-events-none" : ""
+                          }`}
                           disabled={
                             faq?.status === "Rejected" ||
                             (isPending &&
@@ -515,16 +539,17 @@ const ShipmentTable = () => {
                   )}
                 </div>
 
-              <h1>Licence Image</h1>
+                <h1>Licence Image</h1>
 
                 <div>
-                  {viewingFaq?.licenceImage ?  <div className="w-32 h-32 rounded-md overflow-hidden border border-gray-200">
-                    <img
-                      src={`${BASE_IMAGE_URL}/licences/${viewingFaq?.licenceImage}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>  : null}
-                 
+                  {viewingFaq?.licenceImage ? (
+                    <div className="w-32 h-32 rounded-md overflow-hidden border border-gray-200">
+                      <img
+                        src={`${BASE_IMAGE_URL}/licences/${viewingFaq?.licenceImage}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -544,8 +569,3 @@ const ShipmentTable = () => {
 };
 
 export default ShipmentTable;
-
-
-
-
-
